@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="images/whirlpoolLogo.png">
+
+    <title>Innovation Radar 2.0</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="fontawesome/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="dashboard.css" rel="stylesheet">
+    <style>
+        
+    </style>
+
+    <!-- Resources -->
+    <script src="assets/js/amcharts.js"></script>
+    <script src="assets/js/pie.js"></script>
+    <script src="assets/js/xy.js"></script>
+    <script src="assets/js/ammap_amcharts_extension.js"></script>
+    <script src="assets/js/continentsLow.js"></script>
+    <script src="assets/js/export.min.js"></script>
+    <link rel="stylesheet" href="../assets/js/export.css" type="text/css" media="all" />
+    <!-- <script src="assets/js/dark.js"></script> -->
+    <script src="assets/js/light.js"></script>
+    <script src="assets/fontawesome5.0.4/svg-with-js/js/fontawesome-all.js"></script>
+
+    <!-- Chart code -->
+
+<script>
+ var chart = AmCharts.makeChart("chartdiv", {
+     "type": "xy",
+     "theme": "light",
+     "marginRight": 80,
+     "marginTop": 17,
+     "dataProvider": [{	
+         "y": -1.53149024153869,
+         "x": -0.729217357604502,
+         "value": 696, 
+		 "l1": "GE",		 
+         "y2": 0.723389948889161,
+         "x2": -0.866966483772755,
+         "value2": 416,
+		 "l2": "Aesthetics",	
+     }, 
+	 {
+         "y": 0.889913410738504,
+         "x": 0.684515231768696,
+         "value": 506,
+		 "l1": "LG",	
+         "y2": -0.104431409232926,
+         "x2": -0.646722644061475,
+         "value2": 240,
+		 "l2": "Core Performance",	
+     }, {
+         "y": -2.25108202988284,
+         "x": 0.226888254889229,
+         "value": 109, 
+		 "l1": "Maytag",		 
+         "y2": 0.027695159814201,
+         "x2":  0.589024593348007,
+         "value2": 648,
+		 "l2": "Craftsmanship",
+     }, {
+         "y": 0.962747326794613,
+         "x": -1.31502183830573,
+         "value": 849, 
+		 "l1": "Samsung",		 
+         "y2": -3.23328552212672,
+         "x2": 1.70151239768969,
+         "value2": 112,
+		 "l2": "Installation & Logistics",
+     }, {
+         "y": 0.0359279102848856,
+         "x": 1.03203731017826,
+         "value": 1214, 
+		 "l1": "Whirlpool",		 
+         "y2": -0.152570725968218,
+         "x2": 0.354674469293985,
+         "value2": 901,
+		 "l2": "Noise & Vibration",
+     }, {
+         		 
+         "y2": -1.07529179637334,
+         "x2": -5.26601154892146,
+         "value2": 78,
+		 "l2": "Price",
+     },
+	 {
+         		 
+         "y2": 3.16302193826152,
+         "x2": 0.679285106314337,
+         "value2": 153,
+		 "l2": "Service",
+     }, {
+         		 
+         "y2": 0.0870503349870632,
+         "x2": -0.11739175955434,
+         "value2": 326,
+		 "l2": "Usability",
+     }],
+     "valueAxes": [{
+         "position": "bottom",
+         "axisAlpha": 0
+     }, {
+         "minMaxMultiplier": 1.2,
+         "axisAlpha": 0,
+         "position": "left"
+     }],
+     "startDuration": 1.5,
+     "graphs": [{
+         "balloonText": "x:<b>[[x]]</b> y:<b>[[y]]</b><br>value:<b>[[value]]</b>",
+         "bullet": "bubble",
+         "lineAlpha": 0,
+         "valueField": "value",
+		 "labelText": "[[l1]]",
+		 "labelPosition": "middle",
+         "xField": "x",
+         "yField": "y",
+         "fillAlphas": 0,
+         "bulletBorderAlpha": 0.2,
+         "maxBulletSize": 80,
+		 "colorField": "color"
+
+     }, {
+         "balloonText": "x:<b>[[x]]</b> y:<b>[[y]]</b><br>value:<b>[[value]]</b>",
+         "bullet": "bubble",
+         "lineAlpha": 0,
+         "valueField": "value2",
+		 "labelText": "[[l2]]",	
+		 "labelPosition": "middle",
+         "xField": "x2",
+         "yField": "y2",
+         "fillAlphas": 0,
+         "bulletBorderAlpha": 0.2,
+         "maxBulletSize": 80
+
+     }],
+     "marginLeft": 46,
+     "marginBottom": 35,
+     "chartScrollbar": {},
+     "chartCursor": {},
+     "balloon":{
+      "fixedPosition":true
+     },
+     "export": {
+         "enabled": true
+     }
+ });
+</script>
+    
+   
+</head>
+
+<body style="font-size:14px">
+    <header class="top-nav-bar">
+        <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 border-bottom box-shadow navbar-dark">
+            <h3 class="my-0 mr-md-auto font-weight-normal text-all-caps"><i class="fa fa-cog" aria-hidden="true"></i> Innovation Radar</h3>
+            <nav class="my-2 my-md-0 mr-md-3">
+                <a class="p-2 text-likes" href="#"><i class="fa fa-thumbs-up" aria-hidden="true"></i> <span>2200</span></a>
+                <a class="p-2 text-views" href="#"><i class="fa fa-eye" style="color:orange;" aria-hidden="true"></i> <span>2200</span></a>
+            </nav>
+            <a class="btn btn-outline-default nav-icon" href="#"><i class="fa fa-globe" aria-hidden="true"></i></a>
+            <a class="btn btn-outline-default nav-icon" href="#"><i class="fa fa-cogs" aria-hidden="true"></i></a>
+            <a class="btn btn-outline-default nav-icon" href="#"><i class="fa fa-user" aria-hidden="true"></i></a>
+        </div>
+    </header>
+
+    <nav class="nav-sidebar" style="width:230px !important">
+        <ul class="nav nav-pills flex-column">
+            <li>
+                <a href="index.html"><i class="fa fa-tachometer menu-icon" aria-hidden="true"></i> Dashboard</a>
+            </li>
+            <li>
+                <a href="#"><i class="fa fa-tachometer menu-icon" aria-hidden="true"></i> Analysis</a>
+                  <ul class="sub-menu">
+                    <li><a href="newlaunchanalysis.html">New Launch Analysis</a></li>
+                    <li><a href="ConsumerRating.html">Consumer Rating</a></li>
+                    <li ><a style="background: gray;color: black;" href="#">Brand Association Chart</a></li>
+                    <li><a href="bestsellingSKU.html">Best selling SKUs</a></li>
+                    <li><a href="#">Sentiment Analysis</a></li>
+                    <!-- <li><a href="#">Opportunity Analysis</a></li> -->
+                    <li><a href="#">Attribute Analysis</a></li>
+                    <li><a href="#">Triggers of Purchase</a></li>
+                    <li><a href="#">SKU Deep Dive Analysis</a></li>
+                </ul>  
+            </li>
+            <li>
+                <a href="exportreview.html"><i class="fa fa-tachometer menu-icon" aria-hidden="true"></i> Export Reviews</a>
+            </li>
+            <!-- <li>
+                <a href="#"><i class="fa fa-tachometer menu-icon" aria-hidden="true"></i> Export Reviews</a>
+            </li> -->
+        </ul>
+    </nav>
+    <!-- <nav class="nav-right">
+        <ul class="nav nav-pills flex-column">
+            <li>
+                <a href="#"><img src="images/right-icon1.png" /></a>
+            </li>
+            <li>
+                <a href="#"><img src="images/right-icon2.png" /></a>
+            </li>
+            <li>
+                <a href="#"><img src="images/right-icon3.png" /></a>
+            </li>
+            <li>
+                <a href="#"><img src="images/right-icon4.png" /></a>
+            </li>
+        </ul>
+    </nav> -->
+    <div class="container-fluid main-container">
+	<div class="row" style="margin-bottom: 15px;">
+	<div class="col-md-2">
+      </div>
+                        <div class="col-md-10">
+                            <div class="card strpied-tabled-with-hover">
+                                <div class="card-header" style="padding: 2px 20px;">
+                                    <h4 class="card-title">Filters</h4>
+                                    <!-- <p class="card-category">Here is a subtitle for this table</p> -->
+                                </div>
+                                <div class="card-body table-full-width table-responsive" style="padding: 2px;">
+								<div class="row container">
+                        <div class="col-md-3">
+								<div class="form-group">
+      <label for="sel1">Region</label>
+      <select class="form-control" id="sel1">
+        <option value="" class="">Region</option><option value="0">EMEA</option><option value="1">India</option><option value="2">LAR</option>
+		<option selected="selected" value="3">NAR</option>
+      </select>
+	  </div>
+	  </div> <div class="col-md-3">
+								<div class="form-group">
+      <label for="sel1">Category</label>
+      <select class="form-control" id="sel1">
+        <option>Category</option>
+        <option>Small Appliances</option>
+        <option selected="selected">Laundry</option>
+        <option>Cooking</option>
+      </select>
+	  </div>
+	  </div> <div class="col-md-3">
+								<div class="form-group">
+      <label for="sel1">Brand</label>
+      <select class="form-control" id="sel1">
+        <option>Brand</option>
+        <option>LG</option>
+        <option>Samsung</option>
+        <option>Whirlpool</option> 
+      </select>
+	  </div>
+	  </div> 
+	  <div class="col-md-3">
+								<div class="form-group">
+      <label for="sel1">SKU</label>
+	  <div class='input-group date' id=''>
+                    <input type='text' class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+     <!--  <select class="form-control" id="sel1">
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+      </select> -->
+	  </div>
+	  </div>
+	  </div>
+	  
+	  <div class="container" style="display:none">
+    <div class="row">
+        <div class='col-sm-3'>
+            <div class="form-group">
+			<label for="sel1">Start Date</label>
+                <div class='input-group date' id='datetimepicker1'>
+                    <input type='text' value="2017/08/01" class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+		
+		<div class='col-sm-3'>
+            <div class="form-group">
+			<label for="sel1">End Date</label>
+                <div class='input-group date' id='datetimepicker2'>
+                    <input type='text' value="2017/10/31" class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+		<div class='col-sm-3'>
+            <div class="form-group">
+			<!-- <label for="sel1"> </label> -->
+               <button type="submit"  style="margin-top: 25px;" class="btn btn-info btn-fill ">Filter</button>
+            </div>
+        </div>
+        
+    </div>
+</div>
+                                     
+                                     
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+	<div class="row" style="margin-bottom: 15px;">
+	<div class="col-md-2">
+      </div>
+                        <div class="col-md-10">
+                            <div class="card strpied-tabled-with-hover">
+                                <div class="card-header ">
+                                    <h4 class="card-title">Brand Association</h4>
+                                    <!-- <p class="card-category">Here is a subtitle for this table</p> -->
+                                </div>
+                                <div class="card-body table-full-width table-responsive" style="padding:0px;">
+								<div class="row container">
+                         <div id="chartdiv"></div>
+	  </div>
+	  
+	  
+                                     
+                                     
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+				
+				
+				<div class="row" style="margin-bottom: 15px;display:none">
+				<div class="col-md-2">
+      </div>
+                        <div class="col-md-10">
+                            <div class="card striped-tabled-with-hover">
+                                <div class="card-header ">
+                                    <h4 class="card-title">Consumer Rating</h4>
+                                    <!-- <p class="card-category">Here is a subtitle for this table</p> -->
+                                </div>
+                                <div class="card-body table-full-width table-responsive">
+                                    <table class="table table-hover table-striped" style="font-size: smaller;">
+                                        <thead>      
+                                            <th>SKU </th>
+                                            <th>ABT</th>
+                                            <th>BEST BUY</th>
+                                            <th>GE</th>
+                                            <th>HHGREGG</th>
+                                            <th>HOME DEPOT</th>
+									        <th>KITCHENAID.COM</th>  
+									        <th>LOWES</th>  
+									        <th>MAYTAG.COM</th>  
+											<th>SEARS</th>  
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>GTW460ASJWW</td>
+                                                <td style="background-color: #97D3A8;">3.8</td>
+                                                <td style="background-color: #63BE7B;">4.3</td>
+                                                <td style="background-color: #7DC992;">4.1</td>
+                                                <td style="background-color: #ffffff;">2.6</td>
+                                                <td style="background-color: #B0DEBE;">3.5</td>
+                                                <td></td>
+                                                <td style="background-color: #8CCF9F;">3.9</td>
+                                                <td></td>
+                                                <td style="background-color: #7DC992;">4.1</td>
+                                                  <!-- <td><span style="color: green;"><i class="fa fa-arrow-up" aria-hidden="true"></i></span>4.79%</td>   -->
+                                            </tr>
+                                            <tr>
+                                                <td>KDTE254ESS</td>
+                                                <td style="background-color: #63BE7B;">5.0</td>
+                                                <td style="background-color: #7FCA93;">4.7</td>
+                                                <td></td>
+                                                <td style="background-color: #79C78E;">4.8</td>
+                                                <td style="background-color: #ffffff;">3.3</td>
+                                                <!-- <td style="background-color: #63BE7B;">3.5</td> -->
+                                                <td style="background-color: #91D1A3;">4.5</td>
+                                                <td style="background-color: #9DD6AD;">4.4</td>
+                                                <td></td>
+                                                <td style="background-color: #B3DFC0;">4.1</td>
+                                                  <!-- <td><span style="color: green;"><i class="fa fa-arrow-up" aria-hidden="true"></i></span>4.79%</td>   -->
+                                            </tr>
+											<tr>
+                                                <td>KSM150PSER</td>
+                                                <td></td>
+                                                <td style="background-color: #68C07F;">5.0</td>
+                                                <td></td>
+                                                <td></td>
+                                                <td style="background-color: #ffffff;">4.1</td>
+                                                <td style="background-color: #83CB97;">4.8</td>
+                                                <td style="background-color: #83CB97;">4.8</td>
+                                                <td></td>
+                                                <td style="background-color: #63BE7B;">5.0</td> 
+                                                  <!-- <td><span style="color: green;"><i class="fa fa-arrow-up" aria-hidden="true"></i></span>4.79%</td>   -->
+                                            </tr>
+											<tr>
+                                                <td>KSM150PSWW</td>
+                                                <td></td>
+                                                <td style="background-color: #B1DEBE;">4.8</td>
+                                                <td></td>
+                                                <td></td>
+                                                <td style="background-color: #63BE7B;">4.9</td>
+                                                <td></td>
+                                                <td style="background-color: #ffffff;">4.8</td>
+                                                <td></td>
+                                                <td></td>
+                                                  <!-- <td><span style="color: green;"><i class="fa fa-arrow-up" aria-hidden="true"></i></span>4.79%</td>   -->
+                                            </tr>
+											<tr>
+                                                <td>MDB4949SDZ</td>
+                                                <td style="background-color: #63BE7B;">4.6</td>
+                                                <td style="background-color: #63BE7B;">4.6</td>
+                                                <td></td>
+                                                <td></td>
+                                                <td style="background-color: #ffffff;">4.1</td>
+                                                <td></td>
+                                                <td style="background-color: #74C58A;">4.5</td>
+                                                <td style="background-color: #6DC283;">4.6</td>
+                                                <td></td>
+                                                  <!-- <td><span style="color: green;"><i class="fa fa-arrow-up" aria-hidden="true"></i></span>4.79%</td>   -->
+                                            </tr>
+											<tr>
+                                                <td>MVWB835DW</td>
+												<td style="background-color: #7AC88F;">4.7</td>
+                                                <td style="background-color: #96D3A7;">4.3</td>
+                                                <td></td>
+                                                <td style="background-color: #63BE7B;">5.0</td>
+                                                <td style="background-color: #ffffff;">2.8</td>
+                                                <td></td>
+                                                <td style="background-color: #ffffff;">3.0</td>
+                                                <td style="background-color: #9DD6AD;">4.2</td>
+                                                <td style="background-color: #ffffff;">2.8</td>
+                                                
+                                                  <!-- <td><span style="color: green;"><i class="fa fa-arrow-up" aria-hidden="true"></i></span>4.79%</td>   -->
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+				
+				
+				
+				
+                     
+     
+     
+                    
+      
+<!-- <div id="container"></div> -->
+						
+						
+						
+						
+    </div>
+<div style="position: fixed;right: 30px;bottom: 30px;"><span><a href="http://ec2-54-234-226-83.compute-1.amazonaws.com:5000/" target="_blank">
+<i class="fas fa-comment-alt fa-5x"></i></a></span></div>
+    <footer>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col">
+                    <figure class="footer-logo">
+                        <!-- <img src="images/footer-logo.png" /> -->
+                        <img src="images/whirlpoolLogo.png" />
+                    </figure>
+                </div>
+                <div class="col">
+                    <p class="powered-by">Powered by Latent View</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+    <script>
+        window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+	<!--   Core JS Files   -->
+<script src="../assets/js/core/jquery.3.2.1.min.js" type="text/javascript"></script>
+<script src="../assets/js/core/popper.min.js" type="text/javascript"></script>
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+  <script src="../assets/js/core/bootstrap.min.js" type="text/javascript"></script>  
+<!--  Plugin for Switches, full documentation here: http://www.jque.re/plugins/version3/bootstrap.switch/ -->
+<script src="../assets/js/plugins/bootstrap-switch.js"></script>
+<!--  Google Maps Plugin    -->
+<!-- <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script> -->
+<!--  Chartist Plugin  -->
+<!-- <script src="../assets/js/plugins/chartist.min.js"></script> -->
+<!--  Notifications Plugin    -->
+<script src="../assets/js/plugins/bootstrap-notify.js"></script>
+<!-- Control Center for Light Bootstrap Dashboard: scripts for the example pages etc -->
+<script src="../assets/js/light-bootstrap-dashboard.js?v=2.0.1" type="text/javascript"></script>
+<!-- Light Bootstrap Dashboard DEMO methods, don't include it in your project! -->
+<script src="../assets/js/demo.js"></script>
+<style>
+#chartdiv1 {
+  <!-- width: 100%; -->
+  height: 500px;
+}
+</style>
+<!-- Resources -->
+
+<script src="assets1/js/jquery.collapsible.min.js"></script>
+<script src="assets1/js/amcharts.js"></script>
+<script src="assets1/js/serial.js"></script>
+<script src="assets1/js/amstock.js"></script>
+  <script src="assets1/js/export.min.js"></script>  
+  <link rel="stylesheet" href="assets1/js/export.css" type="text/css" media="all" /> 
+<!-- <script src="https://www.amcharts.com/lib/3/themes/light.js"></script> -->
+<!--   Core JS Files   -->
+<script src="assets1/js/core/jquery.3.2.1.min.js" type="text/javascript"></script>
+<script src="assets1/js/core/popper.min.js" type="text/javascript"></script>
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+  <script src="assets1/js/core/bootstrap.min.js" type="text/javascript"></script>  
+<!--  Plugin for Switches, full documentation here: http://www.jque.re/plugins/version3/bootstrap.switch/ -->
+<script src="assets1/js/plugins/bootstrap-switch.js"></script>
+<!--  Google Maps Plugin    -->
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
+<!--  Chartist Plugin  -->
+<script src="assets1/js/plugins/chartist.min.js"></script>
+<!--  Notifications Plugin    -->
+<script src="assets1/js/plugins/bootstrap-notify.js"></script>
+<!-- Control Center for Light Bootstrap Dashboard: scripts for the example pages etc -->
+<script src="assets1/js/light-bootstrap-dashboard.js?v=2.0.1" type="text/javascript"></script>
+<!-- Light Bootstrap Dashboard DEMO methods, don't include it in your project! -->
+<script src="assets1/js/demo.js"></script>
+<script src="assets1/js/moment.min.js"></script>
+<script src="assets1/js/bootstrap-datetimepicker.min.js"></script>
+<script src="assets1/js/transition.min.js"></script>
+	
+	 
+</body>
+
+</html>

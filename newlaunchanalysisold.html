@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="images/whirlpoolLogo.png">
+
+    <title>Innovation Radar 2.0</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="fontawesome/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="dashboard.css" rel="stylesheet">
+    <style>
+        
+    </style>
+
+    <!-- Resources -->
+    <script src="assets/js/amcharts.js"></script>
+    <script src="assets/js/pie.js"></script>
+    <script src="assets/js/ammap_amcharts_extension.js"></script>
+    <script src="assets/js/continentsLow.js"></script>
+    <script src="assets/js/export.min.js"></script>
+    <link rel="stylesheet" href="../assets/js/export.css" type="text/css" media="all" />
+    <script src="assets/js/dark.js"></script>
+    <script src="assets/fontawesome5.0.4/svg-with-js/js/fontawesome-all.js"></script>
+
+    <!-- Chart code -->
+
+
+    <script>
+        /**
+         * Create a map
+         */
+        var map = AmCharts.makeChart("chartdiv", {
+            "type": "map",
+            "theme": "dark",
+            "projection": "winkel3",
+
+            /**
+             * Data Provider
+             * The images contains pie chart information
+             * The handler for `positionChanged` event will take care
+             * of creating external elements, position them and create
+             * Pie chart instances in them
+             */
+            "dataProvider": {
+                "map": "continentsLow",
+                "images": [{
+                    "title": "North America",
+                    "latitude": 39.563353,
+                    "longitude": -99.316406,
+                    "width": 150,
+                    "height": 150,
+                    "pie": {
+                        "type": "pie",
+                        "pullOutRadius": 0,
+                        "labelRadius": 0,
+                        "dataProvider": [{
+                            "category": "Category #1",
+                            "value": 1200
+                        }, {
+                            "category": "Category #2",
+                            "value": 500
+                        }, {
+                            "category": "Category #3",
+                            "value": 765
+                        }, {
+                            "category": "Category #4",
+                            "value": 260
+                        }],
+                        "labelText": "[[value]]%",
+                        "valueField": "value",
+                        "titleField": "category"
+                    }
+                }, {
+                    "title": "Europe",
+                    "latitude": 50.896104,
+                    "longitude": 19.160156,
+                    "width": 200,
+                    "height": 200,
+                    "pie": {
+                        "type": "pie",
+                        "pullOutRadius": 0,
+                        "labelRadius": 0,
+                        "radius": "10%",
+                        "dataProvider": [{
+                            "category": "Category #1",
+                            "value": 200
+                        }, {
+                            "category": "Category #2",
+                            "value": 600
+                        }, {
+                            "category": "Category #3",
+                            "value": 350
+                        }],
+                        "labelText": "",
+                        "valueField": "value",
+                        "titleField": "category"
+                    }
+                }, {
+                    "title": "Asia",
+                    "latitude": 47.212106,
+                    "longitude": 103.183594,
+                    "width": 200,
+                    "height": 200,
+                    "pie": {
+                        "type": "pie",
+                        "pullOutRadius": 0,
+                        "labelRadius": 0,
+                        "radius": "10%",
+                        "dataProvider": [{
+                            "category": "Category #1",
+                            "value": 352
+                        }, {
+                            "category": "Category #2",
+                            "value": 266
+                        }, {
+                            "category": "Category #3",
+                            "value": 512
+                        }, {
+                            "category": "Category #4",
+                            "value": 199
+                        }],
+                        "labelText": "",
+                        "valueField": "value",
+                        "titleField": "category"
+                    }
+                }, {
+                    "title": "Africa",
+                    "latitude": 11.081385,
+                    "longitude": 21.621094,
+                    "width": 200,
+                    "height": 200,
+                    "pie": {
+                        "type": "pie",
+                        "pullOutRadius": 0,
+                        "labelRadius": 0,
+                        "radius": "10%",
+                        "dataProvider": [{
+                            "category": "Category #1",
+                            "value": 200
+                        }, {
+                            "category": "Category #2",
+                            "value": 300
+                        }, {
+                            "category": "Category #3",
+                            "value": 599
+                        }, {
+                            "category": "Category #4",
+                            "value": 512
+                        }],
+                        "labelText": "",
+                        "valueField": "value",
+                        "titleField": "category"
+                    }
+                }]
+            },
+
+            /**
+             * Add event to execute when the map is zoomed/moved
+             * It also is executed when the map first loads
+             */
+            "listeners": [{
+                "event": "positionChanged",
+                "method": updateCustomMarkers
+            }]
+        });
+
+        /**
+         * Creates and positions custom markers (pie charts)
+         */
+        function updateCustomMarkers(event) {
+            // get map object
+            var map = event.chart;
+
+            // go through all of the images
+            for (var x = 0; x < map.dataProvider.images.length; x++) {
+
+                // get MapImage object
+                var image = map.dataProvider.images[x];
+
+                // Is it a Pie?
+                if (image.pie === undefined) {
+                    continue;
+                }
+
+                // create id
+                if (image.id === undefined) {
+                    image.id = "amcharts_pie_" + x;
+                }
+                // Add theme
+                if ("undefined" == typeof image.pie.theme) {
+                    image.pie.theme = map.theme;
+                }
+
+                // check if it has corresponding HTML element
+                if ("undefined" == typeof image.externalElement) {
+                    image.externalElement = createCustomMarker(image);
+                }
+
+                // reposition the element accoridng to coordinates
+                var xy = map.coordinatesToStageXY(image.longitude, image.latitude);
+                image.externalElement.style.top = xy.y + "px";
+                image.externalElement.style.left = xy.x + "px";
+                image.externalElement.style.marginTop = Math.round(image.height / -2) + "px";
+                image.externalElement.style.marginLeft = Math.round(image.width / -2) + "px";
+            }
+        }
+
+        /**
+         * Creates a custom map marker - a div for container and a
+         * pie chart in it
+         */
+        function createCustomMarker(image) {
+
+            // Create chart container
+            var holder = document.createElement("div");
+            holder.id = image.id;
+            holder.title = image.title;
+            holder.style.position = "absolute";
+            holder.style.width = image.width + "px";
+            holder.style.height = image.height + "px";
+
+            // Append the chart container to the map container
+            image.chart.chartDiv.appendChild(holder);
+
+            // Create a pie chart
+            var chart = AmCharts.makeChart(image.id, image.pie);
+
+            return holder;
+        }
+
+
+
+        
+    </script>
+   
+</head>
+
+<body style="font-size:14px">
+    <header>
+        <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 border-bottom box-shadow navbar-dark">
+            <h3 class="my-0 mr-md-auto font-weight-normal text-all-caps"><i class="fa fa-cog" aria-hidden="true"></i> Innovation Radar</h3>
+            <nav class="my-2 my-md-0 mr-md-3">
+                <a class="p-2 text-likes" href="#"><i class="fa fa-thumbs-up" aria-hidden="true"></i> <span>2200</span></a>
+                <a class="p-2 text-views" href="#"><i class="fa fa-eye" style="color:orange;" aria-hidden="true"></i> <span>2200</span></a>
+            </nav>
+            <a class="btn btn-outline-default nav-icon" href="#"><i class="fa fa-globe" aria-hidden="true"></i></a>
+            <a class="btn btn-outline-default nav-icon" href="#"><i class="fa fa-cogs" aria-hidden="true"></i></a>
+            <a class="btn btn-outline-default nav-icon" href="#"><i class="fa fa-user" aria-hidden="true"></i></a>
+        </div>
+    </header>
+
+    <nav class="nav-sidebar" style="width:230px !important">
+        <ul class="nav nav-pills flex-column">
+            <li>
+                <a href="index.html"><i class="fa fa-tachometer menu-icon" aria-hidden="true"></i> Dashboard</a>
+            </li>
+            <li>
+                <a href="#"><i class="fa fa-tachometer menu-icon" aria-hidden="true"></i> Analysis</a>
+                  <ul class="sub-menu">
+                    <li><a href="newlaunchanalysis.html">New Launch Analysis</a></li>
+                    <li><a href="ConsumerRating.html">Consumer Rating</a></li>
+                    <li><a href="brandassociationchart.html">Brand Association Chart</a></li>
+                    <li><a href="#">Sentiment Analysis</a></li>
+                    <!-- <li><a href="#">Opportunity Analysis</a></li> -->
+                    <li><a href="#">Attribute Analysis</a></li>
+                    <li><a href="#">Drivers/Triggers of Purchase</a></li>
+                    <li><a href="#">SKU Deep Dive Analysis</a></li>
+                </ul>  
+            </li>
+            <li>
+                <a href="exportreview.html"><i class="fa fa-tachometer menu-icon" aria-hidden="true"></i> Export Reviews</a>
+            </li>
+            <!-- <li>
+                <a href="#"><i class="fa fa-tachometer menu-icon" aria-hidden="true"></i> Export Reviews</a>
+            </li> -->
+        </ul>
+    </nav>
+    <!-- <nav class="nav-right">
+        <ul class="nav nav-pills flex-column">
+            <li>
+                <a href="#"><img src="images/right-icon1.png" /></a>
+            </li>
+            <li>
+                <a href="#"><img src="images/right-icon2.png" /></a>
+            </li>
+            <li>
+                <a href="#"><img src="images/right-icon3.png" /></a>
+            </li>
+            <li>
+                <a href="#"><img src="images/right-icon4.png" /></a>
+            </li>
+        </ul>
+    </nav> -->
+    <div class="container-fluid">
+	<div class="row" style="margin-bottom: 15px;">
+	<div class="col-md-2">
+      </div>
+                        <div class="col-md-10">
+                            <div class="card strpied-tabled-with-hover">
+                                <div class="card-header" style="padding: 2px 20px;">
+                                    <h4 class="card-title">Filters</h4>
+                                    <!-- <p class="card-category">Here is a subtitle for this table</p> -->
+                                </div>
+                                <div class="card-body table-full-width table-responsive" style="padding: 2px;">
+								<div class="row container">
+                        <div class="col-md-3">
+								<div class="form-group">
+      <label for="sel1">Region</label>
+      <select class="form-control" id="sel1">
+        <option value="" class="">Region</option><option value="0">EMEA</option><option value="1">India</option><option value="2">LAR</option><option value="3">NAR</option>
+      </select>
+	  </div>
+	  </div> <div class="col-md-3">
+								<div class="form-group">
+      <label for="sel1">Category</label>
+      <select class="form-control" id="sel1">
+        <option>Category</option>
+        <option>Small Appliances</option>
+        <option>Laundry</option>
+        <option>Cooking</option>
+      </select>
+	  </div>
+	  </div> <div class="col-md-3">
+								<div class="form-group">
+      <label for="sel1">Brand</label>
+      <select class="form-control" id="sel1">
+        <option>Brand</option>
+        <option>LG</option>
+        <option>Samsung</option>
+        <option>Whirlpool</option> 
+      </select>
+	  </div>
+	  </div> 
+	  <div class="col-md-3">
+								<div class="form-group">
+      <label for="sel1">SKU</label>
+	  <div class='input-group date' id=''>
+                    <input type='text' class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+     <!--  <select class="form-control" id="sel1">
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+      </select> -->
+	  </div>
+	  </div>
+	  </div>
+	  
+	  <div class="container">
+    <div class="row">
+        <div class='col-sm-3'>
+            <div class="form-group">
+			<label for="sel1">Start Date</label>
+                <div class='input-group date' id='datetimepicker1'>
+                    <input type='text' class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+		
+		<div class='col-sm-3'>
+            <div class="form-group">
+			<label for="sel1">End Date</label>
+                <div class='input-group date' id='datetimepicker2'>
+                    <input type='text' class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+		<div class='col-sm-3'>
+            <div class="form-group">
+			<!-- <label for="sel1"> </label> -->
+               <button type="submit"  style="margin-top: 25px;" class="btn btn-info btn-fill ">Filter</button>
+            </div>
+        </div>
+        
+    </div>
+</div>
+                                     
+                                     
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+				
+				
+				<div class="row" style="margin-bottom: 15px;">
+				<div class="col-md-2">
+      </div>
+                        <div class="col-md-10">
+                            <div class="card striped-tabled-with-hover">
+                                <div class="card-header ">
+                                    <h4 class="card-title">Overall Analysis</h4>
+                                    <!-- <p class="card-category">Here is a subtitle for this table</p> -->
+                                </div>
+                                <div class="card-body table-full-width table-responsive">
+                                    <table class="table table-hover table-striped" style="font-size: smaller;">
+                                        <thead>      
+                                            <th>SKU ID</th>
+                                            <th>Brand</th>
+                                            <th>SKU description</th>
+                                            <th>Sentiment score</th>
+                                            <th>Rating</th>
+                                            <th>Reviews</th>
+                                              <th>Threshold</th>  
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>WA50M7450AW</td>
+                                                <td>Samsung</td>
+                                                <td>WA7450 5.0 cu. ft. Top Load Washer</td>
+                                                <td style="color: green;">1.26</td>
+                                                <td>4.4</td>
+                                                <td>403</td>
+                                                  <td><span style="color: green;"><i class="fa fa-arrow-up" aria-hidden="true"></i></span>4.79%</td>  
+                                            </tr>
+                                            <tr>
+                                                <td>WT1901CW</td>
+                                                <td>LG</td>
+                                                <td>5.0 cu. ft. Ultra Large Capacity Front Control Top Load Washer with TurboWash</td>
+                                                <td style="color: green;">0.07</td>
+                                                <td>3.5</td>
+                                                <td>48</td>
+                                                  <td><span style="color: red;"><i class="fa fa-arrow-down" aria-hidden="true"></i></span>-10.00%</td>  
+                                            </tr>
+                                            <tr>				
+                                                <td>CAE2745FQ</td>
+                                                <td>Whirlpool</td>
+                                                <td>2.9 cu. ft. Commercial Top Load Washer in White</td>
+                                                <td style="color: red;">-0.09</td>
+                                                <td>2.9</td>
+                                                <td>17</td>
+                                                <td><span style="color: green;"><i class="fa fa-arrow-up" aria-hidden="true"></i></span>130.77%</td>  
+                                            </tr>
+                                            <tr>				
+                                                <td>WTW7500GC</td>
+                                                <td>Whirlpool</td>
+                                                <td>4.8 cu. ft. High-Efficiency Top Load Washer with Built-In Water Faucet in Chrome Shadow, Intuitive Touch Controls</td>
+                                                <td style="color: green;">1.70</td>
+                                                <td>4.5</td>
+                                               <td>31</td> 
+                                                <td><span style="color: green;"><i class="fa fa-arrow-up" aria-hidden="true"></i></span>7.27%</td>
+                                            </tr>
+                                            <tr>				
+                                                <td>WD100CK</td>
+                                                <td>LG</td>
+                                                <td>27 in. 1.0 cu. ft. SideKick Pedestal Washer in Black Stainless Steel</td>
+                                                <td style="color: red;">-0.38</td>
+                                                <td>3.5</td>
+                                                <td>4</td>
+                                                  <td><span style="color: red;"><i class="fa fa-arrow-down" aria-hidden="true"></i></span>-25.00%</td>  
+                                            </tr>
+                                           <!--  <tr>
+                                                <td>WA52M7750AV</td>
+                                                <td>Samsung</td>
+                                                <td>5.2 cu. ft. High Efficiency Top Load Washer with Steam and Activewash in Black Stainless Steel</td>
+                                                <td>1.4</td>
+                                                <td>4.5</td>
+                                                <td>99</td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td>WV55M9600AV</td>
+                                                <td>Samsung</td>
+                                                <td>5.5 Total cu. ft. High Efficiency FlexWash Washer in Black Stainless Steel</td>
+                                                <td>0.366</td>
+                                                <td>4.4</td>
+                                                <td>15</td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td>WT1501CW</td>
+                                                <td>LG</td>
+                                                <td>LG 4.5 cu ft High Efficiency Top Load Washer (White) ENERGY STAR</td>
+                                                <td>1.1</td>
+                                                <td>4.3</td>
+                                                <td>1182</td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td>WM3770HWA</td>
+                                                <td>LG</td>
+                                                <td>4.5 cu. ft. Ultra Large Capacity TurboWash  Washer</td>
+                                                <td>1.19</td>
+                                                <td>4.5</td>
+                                                <td>294</td>
+                                                <td></td>
+                                            </tr>  -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+				
+				
+				
+				
+                     
+     <div class="row" style="margin-bottom: 15px;">
+	 <div class="col-md-2">
+      </div>
+                        <div class="col-md-10">
+      <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title"><a href="newskuanalysis.html"></a> Overall Rating</h4>
+                                    <p class="card-category">All products including Taxes</p>
+                                </div>
+                                <div class="card-body ">
+								<div class="row">
+								<div class="col-md-3">
+								<div class="form-group">
+      <label for="sel1">Brand</label>
+      <select class="form-control" id="sel1">
+        <option>Brand</option>
+        <option>LG</option>
+        <option>Samsung</option>
+        <option>Whirlpool</option> 
+      </select>
+	  </div>
+	  </div>
+	  <div class="col-md-3">
+								<div class="form-group">
+      <label for="sel1">SKU</label>
+      <select class="form-control" id="sel1">
+        <option>SKU</option> 
+      </select>
+	  </div>
+	  </div>
+	  <div class="col-md-3">
+								<div class="form-group">
+      <label for="sel1">Metric</label>
+      <select class="form-control" id="sel1">
+        <option>Metric</option>
+        <option>Rating</option>
+        <option>Volume</option>
+        <!-- <option>Whirlpool</option>  -->
+      </select>
+	  </div>
+	  </div>
+								</div>
+                                    <div id="chartdiv1" style="height:500px !important;"></div>
+                                </div>
+                                <div class="card-footer ">
+                                    <!-- <div class="legend">
+                                        <i class="fa fa-circle text-info"></i> Tesla Model S
+                                        <i class="fa fa-circle text-danger"></i> BMW 5 Series
+                                    </div> -->
+                                    <hr>
+                                    <div class="stats">
+                                        <i class="fa fa-check"></i> Data information certified
+                                    </div>
+                                </div>
+                            </div>
+                             
+                        </div>
+                        
+                    </div>
+     <div class="row" style="margin-bottom: 15px;">
+	 <div class="col-md-2">
+      </div>
+                        <div class="col-md-5">
+                            <div class="card ">
+                                <div class="card-header ">
+                                    <h4 class="card-title">Attributes</h4>
+                                    <p class="card-category"></p>
+                                </div>
+                                <div class="card-body ">
+                                    <div id="container"></div>
+                                </div>
+                                <div class="card-footer ">
+                                    <!-- <div class="legend">
+                                        <i class="fa fa-circle text-info"></i> Whirlpool
+                                        <i class="fa fa-circle text-danger"></i> Competiors Combined
+                                    </div> -->
+                                    <hr>
+                                    <div class="stats">
+                                        <i class="fa fa-check"></i> Data information certified
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+      <div class="col-md-5">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title"><a href="newskuanalysis.html">Components</a></h4>
+                                    <p class="card-category">All Components</p>
+                                </div>
+                                <div class="card-body ">
+        <div id="container1"></div>
+                                    <!-- <div id="chartActivity1" class="ct-chart"></div> -->
+                                </div>
+                                <div class="card-footer ">
+                                    <!-- <div class="legend">
+                                        <i class="fa fa-circle text-info"></i> Tesla Model S
+                                        <i class="fa fa-circle text-danger"></i> BMW 5 Series
+                                    </div> -->
+                                    <hr>
+                                    <div class="stats">
+                                        <i class="fa fa-check"></i> Data information certified
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                    <div class="row" style="margin-bottom: 15px;">
+                        <!-- <div class="col-md-6 ">
+                            <div class="card ">
+                                <div class="card-header ">
+                                    <h4 class="card-title">New SKU Rating</h4>
+                                    <p class="card-category">All products including Taxes</p>
+                                </div>
+                                <div class="card-body ">
+                                    <div id="chartActivity" class="ct-chart"></div>
+                                </div>
+                                <div class="card-footer ">
+                                    <div class="legend">
+                                        <i class="fa fa-circle text-info"></i> Whirlpool
+                                        <i class="fa fa-circle text-danger"></i> Competiors Combined
+                                    </div>
+                                    <hr>
+                                    <div class="stats">
+                                        <i class="fa fa-check"></i> Data information certified
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+      <div class="col-md-2">
+      </div>
+      <div class="col-md-10">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title"><a href="newskuanalysis.html">Reviews</a></h4>
+                                    <p class="card-category">All Reviews</p>
+                                </div>
+                                <div class="card-body ">
+        <div class="card bg-success text-white" style="margin-bottom: 15px;">
+         <div class="card-body"> 
+		 <ul>
+		 <li>I really like my washer. It is huge I previously had an older washer with an agitator. This will wash about twice as many items I ve seen reviews that talk about noise, I hear the water swish, but other than that I haven t had a problem. I also highly recommend the delivery. We bought ours in Illinois when we were planning to move, then had it delivered to Georgia. The delivery guys ran up the stairs with our washer (good, because they were efficient), and it was very quickly installed. They stayed until the washer ran to see if it was working. Overall, very quick, very well done experience.</li>
+		 <li>My wife loved it, I like Samsung products. This machine is very solid and very dependable. I am very certain that it will stay long with us without any problem. Very less noise, smooth and good quality wash.</li>
+		 <!-- <li>We made an excellent choice with this purchase. It has been everything advertised and some.</li> -->
+		 </ul>
+		 
+		 
+		 
+		 </div>
+        </div>
+         <!-- <div class="card bg-warning text-white">
+        <div class="card-body">
+		<ul>
+		 <li>Have only use a few time and primarily stove top. One shortfall appears to be the oven preheating process is pretty much manual until the desired temp is reached and then having to program the auto baking time</li>
+		 <li>We have enjoyed this product. Dual ovens are a great convenience. Stovetop temperature controls take some time to get the feeling for.. to Hot some times   to cold others, but finally get the hang of. Recommend the product.Wife wanted a double oven. Oven meets all our needs. No issues.</li>
+		 <li>Burner controls seem to be on backward (HI LO   vice versa.</li>
+		 </ul>
+		
+		
+		</div>
+         </div> -->
+         
+         <div class="card bg-danger text-white">
+        <div class="card-body">
+		<ul>
+		 <li>I had a front loader that smelled of mold from almost day one. I wanted to get a top loader but was not sure where to start. This washing machine was priced right and got good reviews. it does a great job with little water. My only issue with the machine is when washing bedding and or a lot of towels. I made the mistake of washing a double sized comforter and four towels together. After two hours and about 5 rinse cycles, I finally turned it off and separated the towels from the comforter to spin them separately. Doing both together messed up the machine s sense of balance. It lets you know when it cannot balance a cycle of clothes but this does happen often when washing large items such as bedding.</li>
+		 <li>Funny. Wife stands 4 Ft 10 1 2 inches she can t reach the bottom even with a step stool it is a struggle Any short of five 6 should order the front load. Even I have to get on tippy toes to reach in. It does work great.</li>
+		 <!-- <li>Purchased this October 2015 (had it for 2 years now) and it has been the WORST purchase ever. We have had LG out to replace the  motherboard  2X. (On the phone they said that  commonly happens with this model  FYI) We have had the electrical replaced, the outlet replaced, the heating element replaced. LG was terrible with poor customer service despite us having a warranty  Now, 2 years later it is still malfunctioning   heating element randomly turns off while cooking. Or the oven won t turn on. Bottom oven is super noisy. We get  f9  on the display often which mean electrical malfunction and have to turn off the circuit to our house, pull the oven out and wiggle the wires around. We have had 2 different electricians look at it and no one can find anything. Our electrical in our house is brand new. And we have even replaced all of the wires to the oven, thinking that may have been part of the problem   For  1600 I would expect something to last longer. </li> -->
+		 <!-- <li>This is my second range of this style (double oven) having bought one years ago in a previous home.  I bought it for the double oven, despite reservations about the design.  I thought I would get used to it.  2 months later and hate the controls. My previous range had digital controls for oven AND elements on the back panel.  This one has ENORMOUS bulky dials that stick out in front.  The dials are so poorly positioned that I cannot work at the stove without accidentally turning the dials , especially if I have to reach to the back elements.  I am relatively short, and just reaching across will turn the dials. In addition, the angle of the dials makes the numbering (especially the tiny dots under the HI) impossible to see...no matter which lights I turn on in my kitchen, there is a glare and the white dots look the same as the metal. Very poor design of controls.</li> -->
+		 </ul>
+		</div>
+         </div>
+                                    <!-- <div id="chartActivity1" class="ct-chart"></div> -->
+                                </div>
+                                <div class="card-footer ">
+                                    <!-- <div class="legend">
+                                        <i class="fa fa-circle text-info"></i> Tesla Model S
+                                        <i class="fa fa-circle text-danger"></i> BMW 5 Series
+                                    </div> -->
+                                    <hr>
+                                    <div class="stats">
+                                        <i class="fa fa-check"></i> Data information certified
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+      
+<!-- <div id="container"></div> -->
+						
+						
+						
+						
+    </div>
+
+    <footer>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col">
+                    <figure class="footer-logo">
+                        <!-- <img src="images/footer-logo.png" /> -->
+                        <img src="images/whirlpoolLogo.png" />
+                    </figure>
+                </div>
+                <div class="col">
+                    <p class="powered-by">Powered by Latent View</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+    <script>
+        window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+	<!--   Core JS Files   -->
+<script src="../assets/js/core/jquery.3.2.1.min.js" type="text/javascript"></script>
+<script src="../assets/js/core/popper.min.js" type="text/javascript"></script>
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+  <script src="../assets/js/core/bootstrap.min.js" type="text/javascript"></script>  
+<!--  Plugin for Switches, full documentation here: http://www.jque.re/plugins/version3/bootstrap.switch/ -->
+<script src="../assets/js/plugins/bootstrap-switch.js"></script>
+<!--  Google Maps Plugin    -->
+<!-- <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script> -->
+<!--  Chartist Plugin  -->
+<!-- <script src="../assets/js/plugins/chartist.min.js"></script> -->
+<!--  Notifications Plugin    -->
+<script src="../assets/js/plugins/bootstrap-notify.js"></script>
+<!-- Control Center for Light Bootstrap Dashboard: scripts for the example pages etc -->
+<script src="../assets/js/light-bootstrap-dashboard.js?v=2.0.1" type="text/javascript"></script>
+<!-- Light Bootstrap Dashboard DEMO methods, don't include it in your project! -->
+<script src="../assets/js/demo.js"></script>
+<style>
+#chartdiv1 {
+  <!-- width: 100%; -->
+  height: 500px;
+}
+</style>
+<!-- Resources -->
+
+<script src="assets1/js/jquery.collapsible.min.js"></script>
+<script src="assets1/js/amcharts.js"></script>
+<script src="assets1/js/serial.js"></script>
+<script src="assets1/js/amstock.js"></script>
+  <script src="assets1/js/export.min.js"></script>  
+  <link rel="stylesheet" href="assets1/js/export.css" type="text/css" media="all" /> 
+<!-- <script src="https://www.amcharts.com/lib/3/themes/light.js"></script> -->
+<!--   Core JS Files   -->
+<script src="assets1/js/core/jquery.3.2.1.min.js" type="text/javascript"></script>
+<script src="assets1/js/core/popper.min.js" type="text/javascript"></script>
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+  <script src="assets1/js/core/bootstrap.min.js" type="text/javascript"></script>  
+<!--  Plugin for Switches, full documentation here: http://www.jque.re/plugins/version3/bootstrap.switch/ -->
+<script src="assets1/js/plugins/bootstrap-switch.js"></script>
+<!--  Google Maps Plugin    -->
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
+<!--  Chartist Plugin  -->
+<script src="assets1/js/plugins/chartist.min.js"></script>
+<!--  Notifications Plugin    -->
+<script src="assets1/js/plugins/bootstrap-notify.js"></script>
+<!-- Control Center for Light Bootstrap Dashboard: scripts for the example pages etc -->
+<script src="assets1/js/light-bootstrap-dashboard.js?v=2.0.1" type="text/javascript"></script>
+<!-- Light Bootstrap Dashboard DEMO methods, don't include it in your project! -->
+<script src="assets1/js/demo.js"></script>
+<script src="assets1/js/moment.min.js"></script>
+<script src="assets1/js/bootstrap-datetimepicker.min.js"></script>
+<script src="assets1/js/transition.min.js"></script>
+	
+	<script>
+
+
+
+var chartData = [];
+generateChartData();
+
+function generateChartData() {
+  var firstDate = new Date( 2012, 0, 1 );
+  firstDate.setDate( firstDate.getDate() - 500 );
+  firstDate.setHours( 0, 0, 0, 0 );
+
+  for ( var i = 0; i < 500; i++ ) {
+    var newDate = new Date( firstDate );
+    newDate.setDate( newDate.getDate() + i );
+
+    var a = Math.round( Math.random() * ( 40 + i ) ) + 100 + i;
+    var b = Math.round( Math.random() * 100000000 );
+   <!-- console.log("a is ",a);   -->
+ <!-- console.log("b is ",b); -->
+    chartData.push( {
+      "date": newDate,
+      "value": a
+	  <!-- , -->
+      <!-- "volume": b -->
+    } );
+  }
+}
+<!-- console.log("chartData is ",chartData); -->
+var a = 
+[{ "year" : "2017", "month" : "1", "day" : "2", "value" : "4.05"},
+{ "year" : "2017", "month" : "1", "day" : "3", "value" : "4.32"},
+{ "year" : "2017", "month" : "1", "day" : "4", "value" : "4.3"},
+{ "year" : "2017", "month" : "1", "day" : "5", "value" : "4.03"},
+{ "year" : "2017", "month" : "1", "day" : "6", "value" : "3.71"},
+{ "year" : "2017", "month" : "1", "day" : "7", "value" : "4.21"},
+{ "year" : "2017", "month" : "1", "day" : "8", "value" : "4.27"},
+{ "year" : "2017", "month" : "1", "day" : "9", "value" : "4.2"},
+{ "year" : "2017", "month" : "1", "day" : "10", "value" : "4.04"},
+{ "year" : "2017", "month" : "1", "day" : "11", "value" : "4.36"},
+{ "year" : "2017", "month" : "1", "day" : "12", "value" : "4.02"},
+{ "year" : "2017", "month" : "1", "day" : "13", "value" : "4.36"},
+{ "year" : "2017", "month" : "1", "day" : "14", "value" : "4.08"},
+{ "year" : "2017", "month" : "1", "day" : "15", "value" : "3.65"},
+{ "year" : "2017", "month" : "1", "day" : "16", "value" : "4.06"},
+{ "year" : "2017", "month" : "1", "day" : "17", "value" : "4.04"},
+{ "year" : "2017", "month" : "1", "day" : "18", "value" : "4.13"},
+{ "year" : "2017", "month" : "1", "day" : "19", "value" : "4.23"},
+{ "year" : "2017", "month" : "1", "day" : "20", "value" : "4.29"},
+{ "year" : "2017", "month" : "1", "day" : "21", "value" : "4.47"},
+{ "year" : "2017", "month" : "1", "day" : "22", "value" : "4.56"},
+{ "year" : "2017", "month" : "1", "day" : "23", "value" : "4.3"},
+{ "year" : "2017", "month" : "1", "day" : "24", "value" : "4.08"},
+{ "year" : "2017", "month" : "1", "day" : "25", "value" : "4.15"},
+{ "year" : "2017", "month" : "1", "day" : "26", "value" : "4.04"},
+{ "year" : "2017", "month" : "1", "day" : "27", "value" : "3.93"},
+{ "year" : "2017", "month" : "1", "day" : "28", "value" : "3.32"},
+{ "year" : "2017", "month" : "1", "day" : "29", "value" : "2.5"},
+{ "year" : "2017", "month" : "1", "day" : "30", "value" : "4.18"},
+{ "year" : "2017", "month" : "1", "day" : "31", "value" : "4.26"},
+{ "year" : "2017", "month" : "2", "day" : "1", "value" : "4.2"},
+{ "year" : "2017", "month" : "2", "day" : "2", "value" : "4.14"},
+{ "year" : "2017", "month" : "2", "day" : "3", "value" : "4.14"},
+{ "year" : "2017", "month" : "2", "day" : "4", "value" : "4.24"},
+{ "year" : "2017", "month" : "2", "day" : "5", "value" : "3.75"},
+{ "year" : "2017", "month" : "2", "day" : "6", "value" : "4.22"},
+{ "year" : "2017", "month" : "2", "day" : "7", "value" : "4.17"},
+{ "year" : "2017", "month" : "2", "day" : "8", "value" : "4.35"},
+{ "year" : "2017", "month" : "2", "day" : "9", "value" : "4.33"},
+{ "year" : "2017", "month" : "2", "day" : "10", "value" : "3.88"},
+{ "year" : "2017", "month" : "2", "day" : "11", "value" : "3.94"},
+{ "year" : "2017", "month" : "2", "day" : "12", "value" : "3.55"},
+{ "year" : "2017", "month" : "2", "day" : "13", "value" : "4.29"},
+{ "year" : "2017", "month" : "2", "day" : "14", "value" : "4.26"},
+{ "year" : "2017", "month" : "2", "day" : "15", "value" : "4.41"},
+{ "year" : "2017", "month" : "2", "day" : "16", "value" : "4.41"},
+{ "year" : "2017", "month" : "2", "day" : "17", "value" : "4.15"},
+{ "year" : "2017", "month" : "2", "day" : "18", "value" : "4.12"},
+{ "year" : "2017", "month" : "2", "day" : "19", "value" : "3.71"},
+{ "year" : "2017", "month" : "2", "day" : "20", "value" : "4.26"},
+{ "year" : "2017", "month" : "2", "day" : "21", "value" : "4.33"},
+{ "year" : "2017", "month" : "2", "day" : "22", "value" : "4.35"},
+{ "year" : "2017", "month" : "2", "day" : "23", "value" : "4.27"},
+{ "year" : "2017", "month" : "2", "day" : "24", "value" : "3.97"},
+{ "year" : "2017", "month" : "2", "day" : "25", "value" : "4.04"},
+{ "year" : "2017", "month" : "2", "day" : "26", "value" : "3.64"},
+{ "year" : "2017", "month" : "2", "day" : "27", "value" : "4.23"},
+{ "year" : "2017", "month" : "2", "day" : "28", "value" : "4.26"},
+{ "year" : "2017", "month" : "3", "day" : "1", "value" : "4.1"},
+{ "year" : "2017", "month" : "3", "day" : "2", "value" : "4.11"},
+{ "year" : "2017", "month" : "3", "day" : "3", "value" : "4.14"},
+{ "year" : "2017", "month" : "3", "day" : "4", "value" : "4.14"},
+{ "year" : "2017", "month" : "3", "day" : "5", "value" : "4.11"},
+{ "year" : "2017", "month" : "3", "day" : "6", "value" : "4.36"},
+{ "year" : "2017", "month" : "3", "day" : "7", "value" : "4.45"},
+{ "year" : "2017", "month" : "3", "day" : "8", "value" : "4.63"},
+{ "year" : "2017", "month" : "3", "day" : "9", "value" : "4.05"},
+{ "year" : "2017", "month" : "3", "day" : "10", "value" : "4.58"},
+{ "year" : "2017", "month" : "3", "day" : "11", "value" : "4"},
+{ "year" : "2017", "month" : "3", "day" : "12", "value" : "3.75"},
+{ "year" : "2017", "month" : "3", "day" : "13", "value" : "4.34"},
+{ "year" : "2017", "month" : "3", "day" : "14", "value" : "4.4"},
+{ "year" : "2017", "month" : "3", "day" : "15", "value" : "4.46"},
+{ "year" : "2017", "month" : "3", "day" : "16", "value" : "4.46"},
+{ "year" : "2017", "month" : "3", "day" : "17", "value" : "4.71"},
+{ "year" : "2017", "month" : "3", "day" : "18", "value" : "3.88"},
+{ "year" : "2017", "month" : "3", "day" : "19", "value" : "4.21"},
+{ "year" : "2017", "month" : "3", "day" : "20", "value" : "4.31"},
+{ "year" : "2017", "month" : "3", "day" : "21", "value" : "4.12"},
+{ "year" : "2017", "month" : "3", "day" : "22", "value" : "4.41"},
+{ "year" : "2017", "month" : "3", "day" : "23", "value" : "4.49"},
+{ "year" : "2017", "month" : "3", "day" : "24", "value" : "3.64"},
+{ "year" : "2017", "month" : "3", "day" : "25", "value" : "3.75"},
+{ "year" : "2017", "month" : "3", "day" : "26", "value" : "4.45"},
+{ "year" : "2017", "month" : "3", "day" : "27", "value" : "4.24"},
+{ "year" : "2017", "month" : "3", "day" : "28", "value" : "4.27"},
+{ "year" : "2017", "month" : "3", "day" : "29", "value" : "4.19"},
+{ "year" : "2017", "month" : "3", "day" : "30", "value" : "3.62"},
+{ "year" : "2017", "month" : "3", "day" : "31", "value" : "3.72"},
+{ "year" : "2017", "month" : "4", "day" : "1", "value" : "4.19"},
+{ "year" : "2017", "month" : "4", "day" : "2", "value" : "4.13"},
+{ "year" : "2017", "month" : "4", "day" : "3", "value" : "3.55"},
+{ "year" : "2017", "month" : "4", "day" : "4", "value" : "4.06"},
+{ "year" : "2017", "month" : "4", "day" : "5", "value" : "3.14"},
+{ "year" : "2017", "month" : "4", "day" : "6", "value" : "3.71"},
+{ "year" : "2017", "month" : "4", "day" : "7", "value" : "4.17"},
+{ "year" : "2017", "month" : "4", "day" : "8", "value" : "4.15"},
+{ "year" : "2017", "month" : "4", "day" : "9", "value" : "3.64"},
+{ "year" : "2017", "month" : "4", "day" : "10", "value" : "3.67"},
+{ "year" : "2017", "month" : "4", "day" : "11", "value" : "4.35"},
+{ "year" : "2017", "month" : "4", "day" : "12", "value" : "4.53"},
+{ "year" : "2017", "month" : "4", "day" : "13", "value" : "4.33"},
+{ "year" : "2017", "month" : "4", "day" : "14", "value" : "4.12"},
+{ "year" : "2017", "month" : "4", "day" : "15", "value" : "4.34"},
+{ "year" : "2017", "month" : "4", "day" : "16", "value" : "4"},
+{ "year" : "2017", "month" : "4", "day" : "17", "value" : "4.3"},
+{ "year" : "2017", "month" : "4", "day" : "18", "value" : "4.44"},
+{ "year" : "2017", "month" : "4", "day" : "19", "value" : "4.22"},
+{ "year" : "2017", "month" : "4", "day" : "20", "value" : "4.18"},
+{ "year" : "2017", "month" : "4", "day" : "21", "value" : "4.36"},
+{ "year" : "2017", "month" : "4", "day" : "22", "value" : "4.36"},
+{ "year" : "2017", "month" : "4", "day" : "23", "value" : "4.24"},
+{ "year" : "2017", "month" : "4", "day" : "24", "value" : "4.31"},
+{ "year" : "2017", "month" : "4", "day" : "25", "value" : "4.36"},
+{ "year" : "2017", "month" : "4", "day" : "26", "value" : "4.24"},
+{ "year" : "2017", "month" : "4", "day" : "27", "value" : "3.79"},
+{ "year" : "2017", "month" : "4", "day" : "28", "value" : "4.04"},
+{ "year" : "2017", "month" : "4", "day" : "29", "value" : "4.04"},
+{ "year" : "2017", "month" : "4", "day" : "30", "value" : "3.63"},
+{ "year" : "2017", "month" : "5", "day" : "1", "value" : "4.04"},
+{ "year" : "2017", "month" : "5", "day" : "2", "value" : "4.18"},
+{ "year" : "2017", "month" : "5", "day" : "3", "value" : "3.59"},
+{ "year" : "2017", "month" : "5", "day" : "4", "value" : "3.58"},
+{ "year" : "2017", "month" : "5", "day" : "5", "value" : "4.68"},
+{ "year" : "2017", "month" : "5", "day" : "6", "value" : "3.76"},
+{ "year" : "2017", "month" : "5", "day" : "7", "value" : "3"},
+{ "year" : "2017", "month" : "5", "day" : "8", "value" : "3.58"},
+{ "year" : "2017", "month" : "5", "day" : "9", "value" : "4.29"},
+{ "year" : "2017", "month" : "5", "day" : "10", "value" : "4.11"},
+{ "year" : "2017", "month" : "5", "day" : "11", "value" : "3.95"},
+{ "year" : "2017", "month" : "5", "day" : "12", "value" : "3.73"},
+{ "year" : "2017", "month" : "5", "day" : "13", "value" : "4.41"},
+{ "year" : "2017", "month" : "5", "day" : "14", "value" : "3.78"},
+{ "year" : "2017", "month" : "5", "day" : "15", "value" : "4.29"},
+{ "year" : "2017", "month" : "5", "day" : "16", "value" : "4.21"},
+{ "year" : "2017", "month" : "5", "day" : "17", "value" : "4.41"},
+{ "year" : "2017", "month" : "5", "day" : "18", "value" : "4.14"},
+{ "year" : "2017", "month" : "5", "day" : "19", "value" : "4.44"},
+{ "year" : "2017", "month" : "5", "day" : "20", "value" : "4.18"},
+{ "year" : "2017", "month" : "5", "day" : "21", "value" : "2.86"},
+{ "year" : "2017", "month" : "5", "day" : "22", "value" : "4"},
+{ "year" : "2017", "month" : "5", "day" : "23", "value" : "3.81"},
+{ "year" : "2017", "month" : "5", "day" : "24", "value" : "4.45"},
+{ "year" : "2017", "month" : "5", "day" : "25", "value" : "4.3"},
+{ "year" : "2017", "month" : "5", "day" : "26", "value" : "4.31"},
+{ "year" : "2017", "month" : "5", "day" : "27", "value" : "3.9"},
+{ "year" : "2017", "month" : "5", "day" : "28", "value" : "3.88"},
+{ "year" : "2017", "month" : "5", "day" : "29", "value" : "3.85"},
+{ "year" : "2017", "month" : "5", "day" : "30", "value" : "4.44"},
+{ "year" : "2017", "month" : "5", "day" : "31", "value" : "4.64"},
+{ "year" : "2017", "month" : "6", "day" : "1", "value" : "4.35"},
+{ "year" : "2017", "month" : "6", "day" : "2", "value" : "4.67"},
+{ "year" : "2017", "month" : "6", "day" : "3", "value" : "4.26"},
+{ "year" : "2017", "month" : "6", "day" : "4", "value" : "3.31"},
+{ "year" : "2017", "month" : "6", "day" : "5", "value" : "3.65"},
+{ "year" : "2017", "month" : "6", "day" : "6", "value" : "4.53"},
+{ "year" : "2017", "month" : "6", "day" : "7", "value" : "3.98"},
+{ "year" : "2017", "month" : "6", "day" : "8", "value" : "4.15"},
+{ "year" : "2017", "month" : "6", "day" : "9", "value" : "4.31"},
+{ "year" : "2017", "month" : "6", "day" : "10", "value" : "4.07"},
+{ "year" : "2017", "month" : "6", "day" : "11", "value" : "3.78"},
+{ "year" : "2017", "month" : "6", "day" : "12", "value" : "4.27"},
+{ "year" : "2017", "month" : "6", "day" : "13", "value" : "4.64"},
+{ "year" : "2017", "month" : "6", "day" : "14", "value" : "4.39"},
+{ "year" : "2017", "month" : "6", "day" : "15", "value" : "4.29"},
+{ "year" : "2017", "month" : "6", "day" : "16", "value" : "3.6"},
+{ "year" : "2017", "month" : "6", "day" : "17", "value" : "4.29"},
+{ "year" : "2017", "month" : "6", "day" : "18", "value" : "4"},
+{ "year" : "2017", "month" : "6", "day" : "19", "value" : "4.31"},
+{ "year" : "2017", "month" : "6", "day" : "20", "value" : "4.2"},
+{ "year" : "2017", "month" : "6", "day" : "21", "value" : "4.33"},
+{ "year" : "2017", "month" : "6", "day" : "22", "value" : "4.21"},
+{ "year" : "2017", "month" : "6", "day" : "23", "value" : "4.31"},
+{ "year" : "2017", "month" : "6", "day" : "24", "value" : "3.8"},
+{ "year" : "2017", "month" : "6", "day" : "25", "value" : "4.12"},
+{ "year" : "2017", "month" : "6", "day" : "26", "value" : "4.79"},
+{ "year" : "2017", "month" : "6", "day" : "27", "value" : "4.21"},
+{ "year" : "2017", "month" : "6", "day" : "28", "value" : "4.41"},
+{ "year" : "2017", "month" : "6", "day" : "29", "value" : "3.95"},
+{ "year" : "2017", "month" : "6", "day" : "30", "value" : "3.95"},
+{ "year" : "2017", "month" : "7", "day" : "1", "value" : "4.3"},
+{ "year" : "2017", "month" : "7", "day" : "2", "value" : "2.86"},
+{ "year" : "2017", "month" : "7", "day" : "3", "value" : "4.49"},
+{ "year" : "2017", "month" : "7", "day" : "4", "value" : "4.28"},
+{ "year" : "2017", "month" : "7", "day" : "5", "value" : "4.15"},
+{ "year" : "2017", "month" : "7", "day" : "6", "value" : "4.45"},
+{ "year" : "2017", "month" : "7", "day" : "7", "value" : "4.25"},
+{ "year" : "2017", "month" : "7", "day" : "8", "value" : "4.53"},
+{ "year" : "2017", "month" : "7", "day" : "9", "value" : "4.5"},
+{ "year" : "2017", "month" : "7", "day" : "10", "value" : "4.25"},
+{ "year" : "2017", "month" : "7", "day" : "11", "value" : "4.41"},
+{ "year" : "2017", "month" : "7", "day" : "12", "value" : "4.29"},
+{ "year" : "2017", "month" : "7", "day" : "13", "value" : "4.13"},
+{ "year" : "2017", "month" : "7", "day" : "14", "value" : "4.43"},
+{ "year" : "2017", "month" : "7", "day" : "15", "value" : "4.03"},
+{ "year" : "2017", "month" : "7", "day" : "16", "value" : "4.5"},
+{ "year" : "2017", "month" : "7", "day" : "17", "value" : "4.31"},
+{ "year" : "2017", "month" : "7", "day" : "18", "value" : "4.51"},
+{ "year" : "2017", "month" : "7", "day" : "19", "value" : "4.32"},
+{ "year" : "2017", "month" : "7", "day" : "20", "value" : "4.55"},
+{ "year" : "2017", "month" : "7", "day" : "21", "value" : "3.71"},
+{ "year" : "2017", "month" : "7", "day" : "22", "value" : "4.38"},
+{ "year" : "2017", "month" : "7", "day" : "23", "value" : "3.4"},
+{ "year" : "2017", "month" : "7", "day" : "24", "value" : "4.39"},
+{ "year" : "2017", "month" : "7", "day" : "25", "value" : "4.26"},
+{ "year" : "2017", "month" : "7", "day" : "26", "value" : "4.37"},
+{ "year" : "2017", "month" : "7", "day" : "27", "value" : "4.11"},
+{ "year" : "2017", "month" : "7", "day" : "28", "value" : "4.44"},
+{ "year" : "2017", "month" : "7", "day" : "29", "value" : "4.15"},
+{ "year" : "2017", "month" : "7", "day" : "30", "value" : "4.17"},
+{ "year" : "2017", "month" : "7", "day" : "31", "value" : "4.29"},
+{ "year" : "2017", "month" : "8", "day" : "1", "value" : "4.15"},
+{ "year" : "2017", "month" : "8", "day" : "2", "value" : "4.45"},
+{ "year" : "2017", "month" : "8", "day" : "3", "value" : "4.47"},
+{ "year" : "2017", "month" : "8", "day" : "4", "value" : "3.88"},
+{ "year" : "2017", "month" : "8", "day" : "5", "value" : "4.48"},
+{ "year" : "2017", "month" : "8", "day" : "6", "value" : "4"},
+{ "year" : "2017", "month" : "8", "day" : "7", "value" : "4.57"},
+{ "year" : "2017", "month" : "8", "day" : "8", "value" : "4.49"},
+{ "year" : "2017", "month" : "8", "day" : "9", "value" : "4.16"},
+{ "year" : "2017", "month" : "8", "day" : "10", "value" : "4.24"},
+{ "year" : "2017", "month" : "8", "day" : "11", "value" : "3.66"},
+{ "year" : "2017", "month" : "8", "day" : "12", "value" : "4.09"},
+{ "year" : "2017", "month" : "8", "day" : "13", "value" : "3.73"},
+{ "year" : "2017", "month" : "8", "day" : "14", "value" : "4.38"},
+{ "year" : "2017", "month" : "8", "day" : "15", "value" : "4.46"},
+{ "year" : "2017", "month" : "8", "day" : "16", "value" : "4.51"},
+{ "year" : "2017", "month" : "8", "day" : "17", "value" : "4.17"},
+{ "year" : "2017", "month" : "8", "day" : "18", "value" : "3.61"},
+{ "year" : "2017", "month" : "8", "day" : "19", "value" : "4.58"},
+{ "year" : "2017", "month" : "8", "day" : "20", "value" : "4.56"},
+{ "year" : "2017", "month" : "8", "day" : "21", "value" : "4.35"},
+{ "year" : "2017", "month" : "8", "day" : "22", "value" : "4"},
+{ "year" : "2017", "month" : "8", "day" : "23", "value" : "4.18"},
+{ "year" : "2017", "month" : "8", "day" : "24", "value" : "3.58"},
+{ "year" : "2017", "month" : "8", "day" : "25", "value" : "3.95"},
+{ "year" : "2017", "month" : "8", "day" : "26", "value" : "4.07"},
+{ "year" : "2017", "month" : "8", "day" : "27", "value" : "3.85"},
+{ "year" : "2017", "month" : "8", "day" : "28", "value" : "4.19"},
+{ "year" : "2017", "month" : "8", "day" : "29", "value" : "4.25"},
+{ "year" : "2017", "month" : "8", "day" : "30", "value" : "4.17"},
+{ "year" : "2017", "month" : "8", "day" : "31", "value" : "4.44"},
+{ "year" : "2017", "month" : "9", "day" : "1", "value" : "4.14"},
+{ "year" : "2017", "month" : "9", "day" : "2", "value" : "4.25"},
+{ "year" : "2017", "month" : "9", "day" : "3", "value" : "3"},
+{ "year" : "2017", "month" : "9", "day" : "4", "value" : "3.76"},
+{ "year" : "2017", "month" : "9", "day" : "5", "value" : "4.16"},
+{ "year" : "2017", "month" : "9", "day" : "6", "value" : "3.83"},
+{ "year" : "2017", "month" : "9", "day" : "7", "value" : "4.3"},
+{ "year" : "2017", "month" : "9", "day" : "8", "value" : "4.4"},
+{ "year" : "2017", "month" : "9", "day" : "9", "value" : "4.71"},
+{ "year" : "2017", "month" : "9", "day" : "10", "value" : "4"},
+{ "year" : "2017", "month" : "9", "day" : "11", "value" : "3.2"},
+{ "year" : "2017", "month" : "9", "day" : "12", "value" : "3.45"},
+{ "year" : "2017", "month" : "9", "day" : "13", "value" : "4.43"},
+{ "year" : "2017", "month" : "9", "day" : "14", "value" : "3.78"},
+{ "year" : "2017", "month" : "9", "day" : "15", "value" : "3.58"},
+{ "year" : "2017", "month" : "9", "day" : "16", "value" : "3.62"},
+{ "year" : "2017", "month" : "9", "day" : "17", "value" : "3.2"},
+{ "year" : "2017", "month" : "9", "day" : "18", "value" : "4.3"},
+{ "year" : "2017", "month" : "9", "day" : "19", "value" : "4.09"},
+{ "year" : "2017", "month" : "9", "day" : "20", "value" : "4.59"},
+{ "year" : "2017", "month" : "9", "day" : "21", "value" : "4.29"},
+{ "year" : "2017", "month" : "9", "day" : "22", "value" : "4.12"},
+{ "year" : "2017", "month" : "9", "day" : "23", "value" : "4.33"},
+{ "year" : "2017", "month" : "9", "day" : "24", "value" : "3"},
+{ "year" : "2017", "month" : "9", "day" : "25", "value" : "4.34"},
+{ "year" : "2017", "month" : "9", "day" : "26", "value" : "4.21"},
+{ "year" : "2017", "month" : "9", "day" : "27", "value" : "4.23"},
+{ "year" : "2017", "month" : "9", "day" : "28", "value" : "4.16"},
+{ "year" : "2017", "month" : "9", "day" : "29", "value" : "4.24"},
+{ "year" : "2017", "month" : "9", "day" : "30", "value" : "4"},
+{ "year" : "2017", "month" : "10", "day" : "1", "value" : "3.6"},
+{ "year" : "2017", "month" : "10", "day" : "2", "value" : "4.43"},
+{ "year" : "2017", "month" : "10", "day" : "3", "value" : "4.6"},
+{ "year" : "2017", "month" : "10", "day" : "4", "value" : "4.48"},
+{ "year" : "2017", "month" : "10", "day" : "5", "value" : "4.36"},
+{ "year" : "2017", "month" : "10", "day" : "6", "value" : "3.97"},
+{ "year" : "2017", "month" : "10", "day" : "7", "value" : "3.56"},
+{ "year" : "2017", "month" : "10", "day" : "8", "value" : "1.87"},
+{ "year" : "2017", "month" : "10", "day" : "9", "value" : "3.68"},
+{ "year" : "2017", "month" : "10", "day" : "10", "value" : "3.93"},
+{ "year" : "2017", "month" : "10", "day" : "11", "value" : "3.57"},
+{ "year" : "2017", "month" : "10", "day" : "12", "value" : "4.55"},
+{ "year" : "2017", "month" : "10", "day" : "13", "value" : "4.46"},
+{ "year" : "2017", "month" : "10", "day" : "14", "value" : "4.48"},
+{ "year" : "2017", "month" : "10", "day" : "15", "value" : "3.93"},
+{ "year" : "2017", "month" : "10", "day" : "16", "value" : "4.28"},
+{ "year" : "2017", "month" : "10", "day" : "17", "value" : "4.52"},
+{ "year" : "2017", "month" : "10", "day" : "18", "value" : "4.12"},
+{ "year" : "2017", "month" : "10", "day" : "19", "value" : "4.45"},
+{ "year" : "2017", "month" : "10", "day" : "20", "value" : "4.61"},
+{ "year" : "2017", "month" : "10", "day" : "21", "value" : "4.16"},
+{ "year" : "2017", "month" : "10", "day" : "22", "value" : "3.36"},
+{ "year" : "2017", "month" : "10", "day" : "23", "value" : "3.62"},
+{ "year" : "2017", "month" : "10", "day" : "24", "value" : "4.41"},
+{ "year" : "2017", "month" : "10", "day" : "25", "value" : "4.13"},
+{ "year" : "2017", "month" : "10", "day" : "26", "value" : "3.62"},
+{ "year" : "2017", "month" : "10", "day" : "27", "value" : "4.35"},
+{ "year" : "2017", "month" : "10", "day" : "28", "value" : "4"},
+{ "year" : "2017", "month" : "10", "day" : "29", "value" : "3"},
+{ "year" : "2017", "month" : "10", "day" : "30", "value" : "4.42"},
+{ "year" : "2017", "month" : "10", "day" : "31", "value" : "3.92"},
+{ "year" : "2017", "month" : "11", "day" : "1", "value" : "4.32"},
+{ "year" : "2017", "month" : "11", "day" : "2", "value" : "3.69"},
+{ "year" : "2017", "month" : "11", "day" : "3", "value" : "3.46"},
+{ "year" : "2017", "month" : "11", "day" : "4", "value" : "3.74"},
+{ "year" : "2017", "month" : "11", "day" : "5", "value" : "4.11"},
+{ "year" : "2017", "month" : "11", "day" : "6", "value" : "4"},
+{ "year" : "2017", "month" : "11", "day" : "7", "value" : "4.55"},
+{ "year" : "2017", "month" : "11", "day" : "8", "value" : "4.45"},
+{ "year" : "2017", "month" : "11", "day" : "9", "value" : "4.47"},
+{ "year" : "2017", "month" : "11", "day" : "10", "value" : "4.4"},
+{ "year" : "2017", "month" : "11", "day" : "11", "value" : "4.23"},
+{ "year" : "2017", "month" : "11", "day" : "12", "value" : "3.7"},
+{ "year" : "2017", "month" : "11", "day" : "13", "value" : "4.38"},
+{ "year" : "2017", "month" : "11", "day" : "14", "value" : "4.35"},
+{ "year" : "2017", "month" : "11", "day" : "15", "value" : "4.28"},
+{ "year" : "2017", "month" : "11", "day" : "16", "value" : "4.34"},
+{ "year" : "2017", "month" : "11", "day" : "17", "value" : "4.25"},
+{ "year" : "2017", "month" : "11", "day" : "18", "value" : "4.66"},
+{ "year" : "2017", "month" : "11", "day" : "19", "value" : "3.61"},
+{ "year" : "2017", "month" : "11", "day" : "20", "value" : "4.35"},
+{ "year" : "2017", "month" : "11", "day" : "21", "value" : "4.59"},
+{ "year" : "2017", "month" : "11", "day" : "22", "value" : "4.31"},
+{ "year" : "2017", "month" : "11", "day" : "23", "value" : "3.89"},
+{ "year" : "2017", "month" : "11", "day" : "24", "value" : "4.19"},
+{ "year" : "2017", "month" : "11", "day" : "25", "value" : "4.04"},
+{ "year" : "2017", "month" : "11", "day" : "26", "value" : "4"},
+{ "year" : "2017", "month" : "11", "day" : "27", "value" : "4.42"},
+{ "year" : "2017", "month" : "11", "day" : "28", "value" : "4.33"},
+{ "year" : "2017", "month" : "11", "day" : "29", "value" : "4.52"},
+{ "year" : "2017", "month" : "11", "day" : "30", "value" : "4.46"},
+{ "year" : "2017", "month" : "12", "day" : "1", "value" : "4.36"},
+{ "year" : "2017", "month" : "12", "day" : "2", "value" : "4.16"},
+{ "year" : "2017", "month" : "12", "day" : "3", "value" : "4"},
+{ "year" : "2017", "month" : "12", "day" : "4", "value" : "4.57"},
+{ "year" : "2017", "month" : "12", "day" : "5", "value" : "4.44"},
+{ "year" : "2017", "month" : "12", "day" : "6", "value" : "4.47"},
+{ "year" : "2017", "month" : "12", "day" : "7", "value" : "4.61"},
+{ "year" : "2017", "month" : "12", "day" : "8", "value" : "4.15"},
+{ "year" : "2017", "month" : "12", "day" : "9", "value" : "4.13"},
+{ "year" : "2017", "month" : "12", "day" : "10", "value" : "4.17"},
+{ "year" : "2017", "month" : "12", "day" : "11", "value" : "4.16"},
+{ "year" : "2017", "month" : "12", "day" : "12", "value" : "4.43"},
+{ "year" : "2017", "month" : "12", "day" : "13", "value" : "4.02"},
+{ "year" : "2017", "month" : "12", "day" : "14", "value" : "4.43"},
+{ "year" : "2017", "month" : "12", "day" : "15", "value" : "4.03"},
+{ "year" : "2017", "month" : "12", "day" : "16", "value" : "4.17"},
+{ "year" : "2017", "month" : "12", "day" : "17", "value" : "3.22"},
+{ "year" : "2017", "month" : "12", "day" : "18", "value" : "4"},
+{ "year" : "2017", "month" : "12", "day" : "19", "value" : "4.1"},
+{ "year" : "2017", "month" : "12", "day" : "20", "value" : "4.22"},
+{ "year" : "2017", "month" : "12", "day" : "21", "value" : "4.49"},
+{ "year" : "2017", "month" : "12", "day" : "22", "value" : "3.82"},
+{ "year" : "2017", "month" : "12", "day" : "23", "value" : "4.33"},
+{ "year" : "2017", "month" : "12", "day" : "24", "value" : "3"},
+{ "year" : "2017", "month" : "12", "day" : "25", "value" : "4"},
+{ "year" : "2017", "month" : "12", "day" : "26", "value" : "3.14"},
+{ "year" : "2017", "month" : "12", "day" : "27", "value" : "4.63"},
+{ "year" : "2017", "month" : "12", "day" : "28", "value" : "1.83"},
+{ "year" : "2017", "month" : "12", "day" : "29", "value" : "2.5"},
+{ "year" : "2017", "month" : "12", "day" : "30", "value" : "1"}];
+<!-- console.log("a length",a.length); -->
+var t = new Date(a[0].year,a[0].month-1,a[0].day);
+<!-- console.log("t is ",t); -->
+var d = [];
+for(i=0;i<a.length;i++){
+ <!-- console.log("Hello ",new Date(a[i].year,a[i].month-1,a[i].day)); -->
+ var x1 = new Date(a[i].year,a[i].month-1,a[i].day);
+ var temp1 = a[i].value;
+ <!-- console.log("temp1",temp1); -->
+ <!-- console.log("x1",x1); -->
+ d.push( {
+      "date": x1,
+      "value": temp1
+	  <!-- , -->
+      <!-- "volume": b -->
+    } );
+   <!-- d.push(new Date(a[i].year,a[i].month-1,a[i].day));   -->
+   <!-- console.log("d is",d); -->
+}
+var chart = AmCharts.makeChart( "chartdiv1", {
+  "type": "stock",
+  "theme": "light",
+  "dataSets": [ {
+    <!-- "color": "#b0de09", -->
+    "color": "#8B59CB",
+    "fieldMappings": [ {
+      "fromField": "value",
+      "toField": "value"
+    }
+	<!-- , { -->
+      <!-- "fromField": "volume", -->
+      <!-- "toField": "volume" -->
+    <!-- }  -->
+	],
+    "dataProvider": d,
+    "categoryField": "date",
+    // EVENTS
+    "stockEvents": [ {
+      "date": new Date( 2017, 9, 19 ),
+      "type": "sign",
+      "backgroundColor": "#85CDE6",
+      "graph": "g1",
+      "text": "W",
+      "description": "WTW7500GC"
+    },{
+      "date": new Date( 2017, 7, 25 ),
+      "type": "sign",
+      "backgroundColor": "#85CDE6",
+      "graph": "g1",
+      "text": "W",
+      "description": "CAE2745FQ"
+    }
+  
+ <!-- , { -->
+      <!-- "date": new Date( 2011, 0, 3 ), -->
+      <!-- "type": "sign", -->
+      <!-- "backgroundColor": "#85CDE6", -->
+      <!-- "graph": "g1", -->
+      <!-- "text": "S", -->
+      <!-- "description": "SKU 1184" -->
+    <!-- }, { -->
+      <!-- "date": new Date( 2011, 1, 6 ), -->
+      <!-- "type": "sign", -->
+      <!-- "backgroundColor": "#85CDE6", -->
+      <!-- "graph": "g1", -->
+      <!-- "text": "S", -->
+      <!-- "description": "SKU 1185" -->
+    <!-- } -->
+  
+ ]
+  } ],
+
+
+  "panels": [ {
+    "title": "Value",
+    "stockGraphs": [ {
+      "id": "g1",
+      "valueField": "value"
+    } ],
+    "stockLegend": {
+      "valueTextRegular": " ",
+      "markerType": "none"
+    }
+  } ],
+
+  "chartScrollbarSettings": {
+    "graph": "g1"
+  },
+
+  "chartCursorSettings": {
+    "valueBalloonsEnabled": true,
+    "graphBulletSize": 1,
+    "valueLineBalloonEnabled": true,
+    "valueLineEnabled": true,
+    "valueLineAlpha": 0.5
+  },
+
+  <!-- <add the json here "periodSelector: {" which is pasted down> -->
+
+  "panelsSettings": {
+    "usePrefixes": true
+  },
+  "export": {
+    "enabled": true
+  }
+} );
+</script>
+	
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/wordcloud.js"></script>
+ <script>
+
+// Javascript method's body can be found in assets/js/demos.js
+         <!-- demo.initDashboardPageCharts();  -->
+
+         <!-- demo.showNotification();  -->
+   var text = '  Rinsing Cleaning Sound Cleaning Washing Aesthetics Color Warranty Color Noise Color Noise Cleaning Noise Sound Noise Color Color Delivery   Odor Color Noise Noise Cleaning Cleaning Aesthetics Aesthetics Balance Noise Noise Warranty   Delivery     Noise Reliability   Noise Noise Delivery Vibration   Balance Noise Noise Cleaning Delivery Durability Cleaning Cleaning Washing Delivery Aesthetics   Packaging   Noise Color Aesthetics Noise Noise     Aesthetics Delivery Packaging Lighting   Noise   Color Color Aesthetics Sound Cleaning Sound Noise Aesthetics Warranty Packaging   Noise Noise Delivery Packaging Color Warranty Noise Noise Color Noise   Noise   Color Color Color Noise Noise   Color   Color Reliability Noise   Color Noise Noise Noise Color Color Delivery Noise Color Packaging Color Color   Noise Color Color Noise     Color Color Delivery Color Aesthetics Delivery Noise Noise Noise Aesthetics Washing Delivery Color Aesthetics Odor Preheat Preheat Washing Washing Packaging Noise Aesthetics Noise Cooling Odor Aesthetics Noise Vibration Noise Reliability Noise Washing Cleaning Warranty Noise Odor Noise   Noise Noise Cleaning Washing Cleaning Cleaning Cleaning Washing Sound Noise     Delivery Aesthetics Cleaning Washing Cleaning Washing Aesthetics Aesthetics Noise Noise     Noise Noise Freezing Cleaning Washing Noise Warranty Warranty Sound Sound Noise Cleaning Washing Color Noise   Cleaning Washing Delivery   Cleaning Noise Color   Noise Sound Noise   Washing Lighting Cooling Warranty Noise   Cooling Aesthetics Aesthetics Washing Cleaning Rinsing Color   Cleaning Noise Cleaning Noise Noise Aesthetics Cleaning   Noise Noise Warranty Delivery Reliability Color Washing Cleaning Washing Washing Color Aesthetics Durability Aesthetics Aesthetics Cleaning Color Cleaning       Odor   Washing Noise Noise Cleaning Aesthetics Cleaning Odor Noise Cleaning Cleaning Aesthetics Color   Washing Noise Noise Noise Reliability Washing Aesthetics Cleaning Cleaning Cleaning Washing Cleaning Washing Noise Cleaning Washing Cleaning Odor Rinsing Cleaning Washing Cleaning Washing Cleaning Washing Noise Warranty Noise   Warranty Warranty Sound Noise Aesthetics Color Aesthetics Lighting Noise Noise Sound Noise Vibration   Noise Noise Noise Noise Noise Noise   Cleaning Noise Cleaning Cleaning Delivery Delivery Warranty Delivery Delivery Color Color Reliability Color Noise Noise Delivery Color Warranty Warranty Reliability Reliability Reliability Color Color             Color Vibration Color Color Noise Color Delivery Noise Delivery Reliability Noise Noise Noise Noise   Color Noise Packaging Delivery Vibration Noise Noise Color Noise Color Delivery Noise Color         Packaging Accessories Delivery Noise Color Delivery       Noise Noise Noise Color Noise Color Color Color Color Delivery Noise Noise         Noise Noise Color Noise   Color Delivery Noise Color     Noise Color   Noise Color     Color   Color Color Noise Color Color Noise Noise Warranty Warranty Color       Noise Noise   Color Noise Warranty Warranty Noise   Color Noise Noise Color Noise Color Noise Color Color   Color Noise Color Color Color   Color Color  ';
+   var text1 = 'Hinge Panel Panel Panel Foot Shelf Shelf Fan Panel   Motor Panel Top Burner Burner Burner Panel Lid Lock Cavity Seal/Gasket Lifters Switch Seal/Gasket Switch Motor Panel Drain Drain Burner Shelf   Knobs Vent Drain Panel Switch Fan Top Panel Burner Burner Panel     Cavity Cavity   Panel Lifters Lifters Vent   Compartment Lid Shelf Element Foot   Drain Lifters Lock Lifters Lifters Lifters Lifters Panel Rack Compartment Top Lifters Switch Lid Lock Lifters Drain Seal/Gasket Panel Shelf Switch Switch   Panel Burner Lid   Rack Lifters Rack Panel Rack   Top Burner Burner Shelf Seal/Gasket   Insulation Rack Switch Panel Cavity Fan Lifters Top Top     Switch Switch Panel Compartment Panel Panel     Panel Rack Vent Switch Fan Shelf Trim Top Burner Panel Cavity Element Top Lock Lifters Motor Drain Lifters Cavity Drain Switch Lid Burner   Knobs Top Top Top Top Burner Top Top Rack Panel Panel Shelf Shelf Foot Lock Trim Trim   Motor   Switch Lock Top Compartment Seal/Gasket Cavity Panel Panel       Drain Cavity Foot     Top Burner   Knobs Top Seal/Gasket Fan Panel     Switch     Switch   Panel Fan Lifters Panel Rack   Fan Vent Vent     Shelf   Switch   Foot Fan Shelf   Motor Panel Panel   Burner     Fan Knobs Burner   Top Top Fan Burner Lifters   Fan Switch   Switch Top   Knobs Top Burner Top Top Fan     Burner Top Top Rack Compartment   Knobs Panel Lock Top   Burner Panel Burner Panel   Burner     Burner Top Burner Vent   Rack Rack Rack   Rack Rack Rack Burner   Drain Lock Lock Cavity Panel Burner   Cavity Panel Cavity Cavity Panel Panel   Rack Rack Rack Element Top       Hinge Cavity Foot Panel Wheels   Panel Rack Lock Burner Fan Element Top Top Foot Top   Burner Burner Burner Lifters   Handle     Top Trim Trim   Fan Trim   Seal/Gasket   Handle     Top Trim Trim Knobs Switch   Fan   Switch     Fan Hinge     Knobs Switch Motor Fan   Compartment   Motor   Knobs       Seal/Gasket     Knobs Top Knobs Top Knobs Rack   Switch Panel   Panel Panel         Switch Top Motor Element Top Panel       Fan Knobs Top Switch Element   Top Rack Rack Fan Switch   Switch   Shelf Drain Hinge Lock Top Top Motor   Switch Lock   Hinge Knobs   Shelf   Switch     Lock   Lock         Switch   Foot Top Top Switch         Switch Panel     Switch     Switch   Panel Switch Foot Knobs Knobs Switch Motor Switch     Lock Foot Wheels         Motor Panel Lock Hinge Fan Burner Panel Lock   Rack Rack Fan Fan   Burner Burner Hinge Shelf Switch Switch Top Motor Rack Panel Panel Panel Panel Lock Seal/Gasket Panel Fan Seal/Gasket Seal/Gasket     Knobs Top   Foot   Valve     Panel Wheels Top Top Top Shelf Motor Panel Switch Cavity   Foot Switch Cavity Fan Vent   Foot Lifters Panel Switch Drain   Foot Panel Panel Panel Burner         Knobs Knobs Panel Panel   Vent Switch   Lock Motor   Burner Switch Panel Lid   Lifters Lock Switch Valve   Knobs Top Top Top   Vent Lifters Switch   Switch   Panel Burner Burner Burner Panel Vent Drain Motor   Panel Vent Vent Vent Rack Rack Wheels Vent   Foot Motor   Cavity Vent Fan Drain Motor Compartment Shelf Fan Vent Drain Vent     Fan Fan Fan Wheels Fan Fan Shelf Fan Motor Wheels Wheels Wheels   Hinge Switch Shelf Panel Compartment Foot Panel Panel Foot Seal/Gasket Shelf Shelf Burner Knobs Knobs Switch Vent Vent Shelf Motor   Panel Compartment Shelf Switch Vent   Panel   Lifters   Switch Switch Panel Switch Switch Knobs Switch     Knobs Cavity Fan Motor Lifters Cavity   Shelf Fan Shelf Foot Foot Panel Shelf Trim Trim Panel   Cavity Lid Cavity   Switch     Seal/Gasket Compartment Panel     Burner Burner Cavity Switch Lock Panel Switch Panel Drain Trim       Panel Panel     Switch Switch Rack Shelf Fan Shelf Switch Top Top Top Fan Drain Compartment   Knobs Lock Panel   Fan Fan   Foot Motor Panel Switch Vent Panel Cavity Containers Fan Vent Hinge Panel Foot Shelf Panel Switch Cavity Compartment Foot Panel Wheels Motor Hinge Fan Panel Shelf Lock Fan Top Switch Cavity Panel Seal/Gasket Top     Panel Switch Switch Switch Burner             Knobs Knobs Panel Panel Rack Top Top       Knobs Switch Panel Panel Cavity Lid Cavity Handle   Top Top       Fan Drain Panel     Rack   Burner Burner Burner Top   Top Top Top Burner Top Top   Knobs Knobs Knobs Burner Burner   Knobs   Lifters Lifters Panel Seal/Gasket Wheels Shelf Fan Lid Shelf Shelf Shelf Rack Belt   Seal/Gasket Fan Vent Switch Switch Burner Panel Cavity Top     Knobs Burner Panel   Knobs   Panel Hinge Insulation Panel Panel Switch Panel Panel Hinge Shelf Top Cavity Cavity Drain Burner Panel   Switch Top Panel Compartment Panel Seal/Gasket Panel Rack Drain Burner Top Burner Burner     Knobs Knobs Top   Knobs Fan       Fan Top Panel Panel Burner   Burner Switch Cavity Fan   Lock Switch Switch   Shelf Panel Top Top Compartment Foot Insulation Seal/Gasket Seal/Gasket Fan Panel Switch Cavity Cavity   Top Top Top Top Burner Top Burner Burner   Panel Top Switch   Knobs     Lock Panel Switch   Panel       Lock   Switch Containers Shelf Containers Shelf Rack Rack Rack Rack   Panel   Fan Vent Top Lock Rack     Switch Switch Burner Panel Panel Burner   Top Top   Panel Panel Panel Panel Shelf Shelf Lock Burner Panel Panel   Switch Lock Hinge Cavity Cavity Rack Panel   Foot Panel Panel Vent Drain Shelf Rack Rack Shelf Shelf Shelf Shelf Rack Rack Rack Fan Top Vent       Switch   Knobs Panel Panel Top Burner Rack Lock Lock Switch   Handle Cavity   Knobs Fan Cavity Fan Handle Handle     Knobs Knobs Switch Switch   Switch   Switch   Panel   Switch                 Foot     Switch     Knobs Compartment   Panel Top Switch Panel       Top Burner Burner Panel   Switch   Lock Panel Lifters Motor Switch Lid Panel Top   Panel Fan Vent Wheels       Cavity Cavity Fan Vent Switch Vent Panel   Top Burner     Top Top Burner Top Seal/Gasket Top Motor   Knobs Rack Fan Top Burner   Knobs Panel Cavity Lid Switch Lifters Cavity Seal/Gasket     Shelf Cavity Panel     Lock Switch Switch Panel Shelf Shelf Compartment Knobs Panel Panel Shelf Vent Panel Lid Lid Panel Insulation Lock Rack Rack     Handle     Knobs Switch Belt Lid   Motor Motor Cavity Seal/Gasket   Cavity Trim   Switch Lid Lid Switch Cavity Fan Panel Rack Rack Motor Top Burner   Knobs Top Top Top Top Top Top Burner Cavity   Fan Vent Vent Vent Fan Top Valve     Panel Rack Rack   Switch   Panel   Rack Panel Insulation Switch Shelf Rack                           Panel Lid Lifters Panel Panel Seal/Gasket Lock Panel Panel Rack Switch Panel Rack Lid Cavity       Rack Rack                           Switch   Hinge   Knobs Seal/Gasket                           Panel Switch Fan Fan Fan Panel Panel Switch   Switch Panel Foot Foot Wheels   Shelf Lock Foot Foot                                                                     Foot                                       Compartment   Lock Foot Switch Top Insulation Panel Top Top Seal/Gasket Wheels Panel Belt Shelf Motor Motor Fan Top                                       Switch   Valve Burner Burner   Knobs Panel Switch Top Switch Containers Panel   Seal/Gasket Lock Switch   Switch Belt     Panel Top Panel   Foot Switch Trim       Switch       Switch Panel     Fan Top Top   Switch     Switch     Switch   Rack Switch Cavity Panel Foot Lock         Fan Top Top Top Vent Burner Top Switch         Top   Lock Top Burner Burner   Panel Seal/Gasket Rack Burner             Cavity Cavity Rack Knobs   Switch Foot Valve Foot Switch Switch Panel   Switch Seal/Gasket Motor Motor Switch Panel Foot   Fan Panel Fan   Switch Burner Burner Burner             Element Knobs Knobs Top Top Top Top Top Top Top Panel Switch         Panel   Panel Switch Top Panel Panel Top     Top Panel Panel Switch Wheels Drain Panel Seal/Gasket Switch Switch Wheels Switch Lid Panel Cavity   Fan Vent Insulation Panel   Panel Burner Top Top Vent Fan Motor Panel Switch Top Rack Rack Seal/Gasket Fan Vent Lid Drain   Cavity Cavity Shelf Cavity Switch Seal/Gasket   Fan Compartment Knobs     Panel Valve Motor Handle Switch Burner Top Top Burner Top Switch Top Burner Burner   Motor   Panel Shelf Rack Rack                           Knobs Top   Element Top Burner Top Burner   Cavity   Panel Panel Cavity Top Lid Element Top Shelf Burner Switch Lifters Panel Lid Top Lock Panel Fan Seal/Gasket Fan Panel Wheels   Motor Vent Fan Fan Lock Panel   Fan Rack Panel Valve   Rack Motor Hinge Insulation Insulation Insulation Insulation Insulation Panel Rack Rack Motor   Panel Drain Panel Burner Burner Burner Burner Fan Panel Burner Knobs Vent Burner Top Fan Vent Burner   Knobs   Top Burner Burner Burner Fan Vent     Fan Fan   Burner Top Burner       Top   Vent   Switch   Panel Drain   Lifters Trim Drain Drain Motor Lifters Cavity Lifters Panel Lifters Lifters Motor   Top Cavity   Switch Trim Drain Lifters Compartment   Drain Cavity Lid Lifters Lifters Lifters Seal/Gasket Lifters Switch Cavity Lid   Knobs Lifters   Panel   Shelf Switch Switch Compartment Motor Drain Lock Switch   Shelf Rack Switch Panel Switch Lock Rack Seal/Gasket Shelf   Rack Drain   Lid     Rack Lifters Foot Rack Rack Rack Shelf   Lock Lock Lock Fan Vent Panel Shelf Fan Top Vent Fan Switch Top   Element Top Burner Top Burner Panel   Burner Burner Switch Burner Burner Panel Burner Top Burner Panel Top Panel Panel Lid Lock Switch Panel Lock Fan Shelf   Lock Switch Panel   Lock Burner Top Cavity Switch Burner Burner Motor Rack Cavity Lid Cavity                                               Shelf Compartment     Lid Motor Motor     Cavity   Top Top Panel Top   Fan   Panel     Panel Motor Knobs Lock Top Panel Shelf Shelf   Vent Switch Fan Top Top Burner Lock Cavity Lid Top Panel Top Vent Top   Rack Rack Burner Panel Lid Switch Panel Shelf Fan Vent Top Burner Switch Panel Lifters Shelf     Panel Switch Top Top Panel Vent Panel Cavity Cavity Panel Panel Panel Panel Panel   Burner   Knobs Top Panel Drain Lifters Motor   Panel Top Burner Top Top Top Top Handle   Cavity   Trim Motor Fan Handle Fan   Handle   Switch   Switch     Switch Top Motor Fan Motor Cavity Panel Top Top Panel Shelf Shelf Shelf Shelf Fan Panel Seal/Gasket Fan Seal/Gasket Motor Motor Motor Element Fan   Panel Panel Top Top Burner Top Top Burner Top Top Top Top   Burner Top   Top Top Burner Drain   Burner Burner Burner Panel Switch Panel Switch Switch Switch Vent Burner Vent   Insulation Lock Switch         Hinge     Cavity Lifters Lifters Switch   Switch Switch Switch   Knobs Top       Top Fan Fan Vent Trim Panel Switch Fan   Top Switch Hinge Panel Panel   Fan Vent Panel   Panel Panel Seal/Gasket Switch Switch   Panel Panel Panel Motor Cavity Wheels Knobs Panel Switch   Vent Vent   Switch   Panel   Switch Panel Switch   Fan Hinge   Lock     Foot   Switch Cavity Fan                       Panel Panel Seal/Gasket       Seal/Gasket Seal/Gasket     Rack     Drain Switch Switch   Fan   Valve Panel Panel Lock Cavity Switch Top Top Foot Top Panel Compartment Valve   Panel     Motor Switch   Panel Panel Cavity Lid Lifters Compartment   Burner Burner Fan Motor Trim Panel Belt   Seal/Gasket Cavity Burner       Switch Top Burner Top Fan                     Seal/Gasket Switch Lifters Lock Seal/Gasket Panel Shelf Shelf Seal/Gasket   Cavity Rack Switch Rack Wheels Lock Lock Panel Top Top Burner Fan Top Top Top Fan Lifters Burner Burner   Panel   Switch Panel Switch Panel Switch Cavity Shelf Rack Valve   Shelf Hinge Drain Insulation Shelf   Switch Rack Fan Top Burner Top Rack Rack Burner   Burner Burner Top Top Top Top Top Panel Top Top   Knobs     Lock Motor Vent Panel Motor Vent Switch Shelf Motor Switch Foot Seal/Gasket Switch Burner Burner   Top Top Top Panel Shelf Shelf Top Burner Top Top Motor   Top Switch Top   Burner Top Element   Top Burner Top Top Top Fan Motor Lock   Panel Wheels Cavity Cavity Motor Rack Rack Shelf   Cavity Compartment Foot Fan Shelf Switch Switch Foot   Compartment Burner     Top Panel   Panel   Knobs Switch   Burner   Top Burner Panel Top Vent Switch Trim   Panel Top Top Top Wheels Lock Switch Panel Drain Panel Lifters Lifters Seal/Gasket Shelf Motor Seal/Gasket   Lock     Wheels   Burner Top Burner   Top   Burner Element Top Burner Top Burner Top Top Top       Top Top Knobs Switch Switch Top Top Knobs Knobs Top Top Lock Burner   Knobs Burner Knobs Top Burner   Switch   Knobs Switch Valve Panel Panel Fan Vent Motor Fan   Switch Fan Fan   Motor Top   Panel Trim     Burner Top Top Top   Panel Fan   Vent Fan Vent Vent   Vent Switch Vent Vent Vent Vent Panel   Burner Panel Panel   Seal/Gasket Hinge   Panel     Fan Fan Panel Panel Panel       Knobs   Panel Cavity Panel Cavity Compartment   Panel Vent Panel Shelf   Top     Panel           Shelf Compartment Fan     Switch Shelf   Lock Compartment Cavity Panel Burner Knobs Top Burner Burner Top Burner   Fan Rack Burner Burner Burner Burner Burner Burner Burner Burner Top Top   Knobs Burner   Switch Switch     Panel Switch Burner Top Burner       Fan Panel Burner Burner Knobs Shelf Lid Lifters Cavity Top Hinge Valve Valve Hinge Panel   Top Burner Switch Top Rack Burner Burner   Top Top Lid Knobs Switch Top         Element Switch Switch   Fan   Foot Cavity   Rack Shelf Shelf   Burner Drain Top Top Top     Insulation       Knobs Knobs Panel     Shelf     Knobs   Lock     Rack Rack Panel Rack Top Lifters   Top   Motor   Panel Seal/Gasket Drain Panel   Fan Insulation Cavity   Panel Lid Burner Burner Top Top Rack Top Panel Panel Seal/Gasket Rack Switch Panel   Rack Rack Switch Switch Switch     Fan   Fan Top Top Valve Top   Switch Cavity Lid Lid     Lid Cavity Lid Lid Lock Lock Lifters Lifters Panel Panel Lifters Lifters Fan Shelf Rack Wheels Panel Cavity Lid Burner Top Element Top Fan Panel Lifters Lifters Burner   Switch Lock Top Top Element Fan Fan Fan   Compartment Top Top   Switch Top   Panel       Switch Lid Lock           Knobs         Fan Fan     Switch   Lock Panel Panel Compartment   Knobs       Top Burner Shelf Burner Element Top Panel Shelf Burner   Top Burner Top Burner   Burner Burner     Burner Burner   Burner Seal/Gasket Cavity Top Knobs Top Fan     Seal/Gasket           Switch Switch     Hinge Hinge Foot Foot Panel   Lock Switch Element Knobs Rack Element Burner Top Fan Vent Insulation Fan Panel     Switch Switch Switch   Switch Shelf Switch   Panel   Seal/Gasket Wheels Panel Switch Seal/Gasket Wheels Wheels Switch Switch Compartment Shelf Seal/Gasket Panel Shelf Compartment Switch Drain Switch Containers Compartment Seal/Gasket Panel   Knobs Top Top Switch Top Fan       Top Burner Fan   Handle Top Burner Top   Panel Panel Switch   Insulation Lock Shelf Fan Motor Wheels   Panel Switch   Seal/Gasket           Lock Shelf Compartment   Vent Switch Switch Panel Fan     Knobs Fan Burner   Panel Rack Vent   Switch Panel Drain Wheels       Motor Lock Fan Top Panel                 Panel Switch Panel Panel       Panel Compartment Motor Shelf           Panel Insulation Panel       Shelf Shelf Shelf Lock   Switch   Compartment Top Compartment Panel Containers   Panel   Seal/Gasket Burner Hinge Burner     Knobs   Panel Rack   Lock Switch   Switch   Switch Lock   Switch Rack Switch         Switch           Panel   Panel Wheels Foot Motor Switch   Cavity Drain Panel Panel     Panel Seal/Gasket Trim Lid Cavity Panel Switch     Cavity Panel Panel Shelf Drain Panel Panel       Panel Top Element Top Top Burner Fan Element Element Switch Fan Switch Burner Panel Seal/Gasket Panel Lifters Panel Switch     Shelf Panel Shelf     Cavity   Panel Seal/Gasket Rack Panel Rack Rack Panel Lifters Panel Top     Panel Burner Top Top Vent         Burner Switch   Vent Cavity Lifters Top Cavity     Panel Switch Switch Switch Burner Rack Lid Top Top Burner Top Top   Element Top Rack   Panel Rack Panel Shelf Rack Lifters Switch Drain Rack   Rack   Panel Rack Panel               Knobs Knobs Burner Burner Burner Element Top Cavity Cavity Fan           Rack Rack     Top     Switch Switch Switch Motor Top Switch Switch Rack Rack Belt Drain Panel Panel Panel Panel   Panel Panel   Switch   Switch Lock   Fan Insulation Rack Lock Panel Panel Panel Lid Panel Wheels Shelf Element Element Top Knobs Lock Top Top   Motor Shelf     Rack Rack                 Switch Panel Switch Cavity Lifters Lifters Lifters Shelf Rack Burner Burner   Wheels Burner Burner Element     Panel Switch Lock Motor Motor           Lock Panel Seal/Gasket Wheels Wheels Drain Panel Switch     Switch Rack Switch Panel Switch Top Hinge Insulation Switch Fan Shelf           Switch Switch   Switch Motor   Lock Motor   Knobs     Motor Motor   Motor         Switch Motor Switch Switch Switch Switch Switch Foot Switch Containers Foot Motor Fan Foot Foot Lock Lock         Compartment       Insulation Insulation Switch             Switch   Motor Motor     Motor Motor Seal/Gasket   Lock   Lock Seal/Gasket Switch           Switch Switch             Switch Motor Seal/Gasket Knobs   Switch Motor Motor   Switch   Insulation Foot           Lock Seal/Gasket Motor Switch Seal/Gasket           Containers   Switch Lock     Knobs Containers Containers         Handle                   Switch Handle Handle           Knobs Handle Handle Handle Handle     Handle Handle Switch   Knobs Switch Switch   Handle Handle Handle   Handle Handle Switch Handle Handle Motor Motor Seal/Gasket Motor Handle Handle Handle Handle Handle Handle Trim Motor Containers Panel   Switch Switch Knobs Motor Seal/Gasket Seal/Gasket   Switch   Handle Motor Lock Motor Motor       Knobs   Hinge     Knobs Switch       Knobs Switch Handle   Motor   Motor Seal/Gasket         Panel Handle Switch Rack Switch Switch Switch Lock Motor Switch Containers Switch Motor Motor   Switch Cavity   Seal/Gasket         Foot Switch           Handle Handle Foot Motor Motor Switch     Panel Motor Switch Motor Seal/Gasket     Panel Switch   Switch Switch Switch Switch     Switch                 Motor Rack   Switch Switch     Switch     Switch   Switch Foot   Switch       Lock Lock Switch   Handle         Switch Switch Drain Vent Fan Lock Lock Switch             Switch Handle   Switch Motor         Fan Switch Panel Insulation Lock Motor Switch Motor     Seal/Gasket   Seal/Gasket Lock Switch       Seal/Gasket Switch Motor Motor Switch Motor Switch   Containers Motor       Switch Hinge Motor Seal/Gasket Motor Switch Lock       Lock Seal/Gasket   Rack Containers Handle   Rack Vent Switch Handle Containers Seal/Gasket   Motor Seal/Gasket Foot Seal/Gasket   Motor   Switch Compartment     Motor   Handle   Handle   Handle Foot Seal/Gasket Fan     Switch Switch           Motor   Hinge     Knobs   Panel Panel     Motor Lock Switch   Switch Seal/Gasket Switch   Lock Lock   Motor       Motor   Switch Lock Belt Belt Belt Lock Switch Containers Containers Switch       Switch             Fan Panel Shelf Foot   Knobs Switch Rack Handle   Switch   Knobs Switch Motor Switch Trim Motor Motor Trim Seal/Gasket Motor Motor Motor   Handle   Switch Motor Seal/Gasket Motor Knobs Knobs Switch Insulation Motor Handle Trim Handle Handle Handle Handle Handle Handle Handle Trim Handle     Switch Motor Seal/Gasket Motor Trim   Handle Trim Trim Trim Trim         Knobs   Handle Handle Motor   Switch Switch Lock       Knobs     Motor Trim Handle   Handle Handle     Switch Handle Hinge Hinge   Knobs     Trim Handle   Containers   Motor Lock Switch Drain Motor   Containers Foot Handle Switch Motor   Switch   Panel Hinge Switch Containers Motor Lock Containers Foot       Knobs Switch Vent Switch     Switch   Switch           Switch Vent Switch Containers Lock Cavity   Drain Foot Hinge Switch Motor Motor Motor Motor Handle               Lock   Insulation   Switch Handle     Lock Switch Handle         Knobs Switch Handle Handle Knobs Switch   Motor   Lock   Insulation Handle Switch       Lock Switch Motor   Switch   Switch     Switch       Switch     Lock Lock Switch Lifters Switch   Panel Motor Switch Switch Switch Switch Switch Switch Switch Lock Lock Vent Switch       Switch   Switch Panel Switch     Switch Switch Containers Switch Seal/Gasket Motor Switch Motor Motor Motor Motor       Containers   Knobs   Switch   Motor   Vent           Switch       Switch   Knobs Switch Lock Switch Switch Containers   Switch Switch Lock Switch Switch Switch   Switch Switch Switch   Switch     Switch Switch Switch Switch Compartment Switch         Switch Seal/Gasket Motor Motor Lock Lock Motor Switch Lock     Knobs Switch Switch Lock Motor   Switch Motor Motor     Switch Compartment Seal/Gasket         Switch Switch Lock Lock Switch Switch Switch Switch Motor Motor Lock     Switch Switch Motor Panel Seal/Gasket Switch Drain   Switch   Switch         Vent Switch   Switch   Switch Seal/Gasket Handle Foot Containers   Fan Seal/Gasket Motor   Lock Switch Switch Motor       Lock Lock Motor Panel Panel Switch Motor   Switch   Motor Switch     Switch   Hinge   Switch Motor Lock Handle Lock Lock     Vent Fan Switch Fan Switch Motor     Switch       Panel Lock Lock Motor     Drain         Panel   Switch Switch   Switch Lock Switch   Switch Switch Switch   Knobs Motor Motor Foot Fan Fan Lifters     Fan Switch Foot Knobs Panel Panel Foot Vent   Switch   Wheels     Motor Lock Switch     Motor Foot Vent     Switch     Knobs Switch   Switch Panel Switch Motor   Motor Switch   Knobs Lock Seal/Gasket Switch Switch Switch Switch     Motor   Motor Foot Motor     Switch   Switch Motor Motor   Switch   Switch Switch Seal/Gasket Seal/Gasket Foot Motor Panel Vent Motor Switch   Switch Lock Motor Motor   Switch Switch Vent Wheels Switch   Switch Switch Switch Switch         Knobs Switch Foot Switch   Lock   Drain   Motor Valve       Motor Switch     Switch   Switch Motor     Switch   Compartment Switch                     Switch Switch     Switch   Panel Switch   Panel Switch   Switch Switch Switch   Switch Lock Switch Seal/Gasket Motor   Lock Belt Containers Motor   Fan   Switch   Switch Foot   Motor Knobs Seal/Gasket Seal/Gasket   Switch Switch Motor Lock Motor Motor Motor Belt   Lock Motor Motor Motor Motor   Switch Switch Switch Lock Switch Seal/Gasket Motor Motor Handle Handle         Handle   Handle Foot   Knobs Switch Handle Seal/Gasket   Knobs Switch   Handle Handle Handle Handle Handle Seal/Gasket Handle Seal/Gasket Seal/Gasket   Switch Switch Motor           Switch Lock Lock Lock Motor Motor Wheels   Switch Motor Hinge Lock Foot Rack Motor     Trim Handle Handle   Switch     Trim Handle Seal/Gasket Switch Rack Switch Handle Trim Handle   Handle Knobs Lock         Motor Handle Handle   Fan Motor Handle   Switch Lock Switch   Switch Vent   Motor Panel Handle Drain   Switch Handle Switch Handle   Switch Switch Handle Knobs Switch Switch Switch   Hinge     Knobs   Switch Switch Switch     Seal/Gasket Motor Panel   Knobs Foot   Fan Lock Switch Compartment   Drain Handle Lock Lock Lifters Wheels Foot Foot Wheels     Wheels Foot   Switch     Knobs Knobs Seal/Gasket Lock       Panel Switch Motor     Motor Switch Compartment Panel Switch         Lock Insulation Switch Seal/Gasket Switch Switch Panel Lock Lock Switch Handle Fan Switch   Motor         Hinge Foot Switch Lock   Seal/Gasket     Switch Switch Switch Switch Motor Seal/Gasket Fan Switch Seal/Gasket   Switch                       Switch   Fan   Switch Containers       Rack Switch       Switch Switch Switch       Switch     Lock Trim Motor Motor Knobs Motor Handle Handle Switch Switch Switch Switch               Switch Lock   Switch Panel   Lock Switch Switch Switch Seal/Gasket   Switch Lock Switch Motor Switch Knobs Drain     Foot   Lock Seal/Gasket Motor Seal/Gasket Lock Foot Motor Cavity Drain Panel   Switch     Switch   Foot Switch Motor Panel     Foot         Seal/Gasket Motor     Drain Drain Panel   Top   Top   Panel   Seal/Gasket Seal/Gasket Top Hinge Panel   Top Seal/Gasket   Panel     Knobs Top   Top   Top Top   Top Top Rack Rack Rack Hinge Cavity Foot Panel Panel Panel Panel Panel Burner Drain Panel Knobs Element Burner Panel       Rack Rack Burner   Element Fan Switch   Knobs Panel Hinge Cavity Panel Top Top   Fan   Motor Panel   Fan Foot Fan Fan Fan Top Fan Vent         Switch Burner Top Vent Vent Switch Fan Fan Vent   Lifters Lid Motor Panel Panel Switch Compartment Compartment Panel Panel   Fan Rack Rack Switch Switch Rack Motor Lifters Lifters Burner   Knobs Panel Panel Fan Vent Lid Lock Cavity   Switch Panel Top     Rack Rack Shelf Drain Fan         Top     Switch Switch Panel Rack Panel   Lifters       Rack Rack Compartment         Shelf Shelf Shelf Compartment Panel Panel Panel Panel   Lifters Switch   Panel Seal/Gasket   Motor Panel Fan Switch Rack   Shelf Shelf Panel Panel   Panel Lid Switch     Switch   Cavity   Fan Motor Cavity Cavity   Knobs Panel Fan Switch Vent Rack Rack Rack Fan Panel Rack Rack Rack Fan Vent Switch Fan Top Top Top Burner Panel Top Top Burner Panel Vent   Panel Panel   Fan Foot Foot   Panel Lid Panel Lid Motor Panel Fan Panel Seal/Gasket Shelf Rack Rack Fan Switch Seal/Gasket Switch   Burner   Lock Element Top Top Burner Burner     Burner Top   Knobs   Burner Burner Burner Burner Burner Switch   Top Insulation Panel Lid Panel Switch Panel Lid Lifters Fan Shelf Shelf Panel Panel Fan   Rack   Motor Panel Panel Lid Lock   Lifters Cavity Fan Rack   Rack   Switch   Lifters Motor Switch Insulation Insulation Fan Fan Burner Containers Compartment Switch Top Switch Rack Drain Shelf Burner     Panel Top Switch Shelf   Switch   Shelf Seal/Gasket Wheels Panel   Panel Hinge     Panel Drain Rack Rack   Switch Element Fan Burner Top Burner Top       Top Foot     Trim Vent Switch     Element Top Burner Foot Rack Rack         Lifters Top Burner Top   Compartment Compartment Panel Cavity Lid Lid Rack Seal/Gasket Fan         Switch Switch   Switch       Panel Panel   Burner     Knobs Top Burner Vent Wheels   Top Top Fan Fan   Switch   Panel Valve   Fan   Shelf Cavity Top Lid Hinge   Knobs Knobs Top Vent   Top Panel Wheels Wheels Shelf Switch Lock Switch Rack Shelf Lid Panel Lid Burner   Knobs Knobs Panel Burner Lid Lid Lock Compartment Vent Rack   Rack Rack Rack Burner   Top   Top Burner   Top Panel Vent   Burner Lifters Lifters Vent   Element Fan Top Panel Lifters Shelf     Burner Top Drain Fan Panel Top Top Burner   Panel   Switch Drain Panel Hinge Knobs Top Shelf Vent Wheels Rack Fan Switch   Fan Vent Lock Knobs Knobs Panel Panel Fan Burner Top Shelf   Motor Switch   Switch   Motor Knobs Foot   Rack Seal/Gasket         Fan Panel Switch Switch       Lock Switch Containers     Switch   Switch       Foot   Motor Switch         Knobs Motor   Panel Switch Switch Switch Seal/Gasket Seal/Gasket Switch Handle Switch Switch   Switch Seal/Gasket   Motor     Containers       Motor Fan Containers Motor Switch                 Switch           Switch Foot Lifters Switch Switch Switch Foot Switch Motor     Panel Seal/Gasket Switch Switch     Switch   Lock Handle Handle     Switch   Handle Motor Knobs Trim         Knobs   Handle Knobs Knobs Knobs Switch Switch Switch Lock   Knobs Switch Handle   Handle   Knobs Switch Handle Motor Motor Motor Handle   Knobs Knobs Switch       Knobs Switch     Motor Switch   Switch Handle Handle Trim Handle Lock Handle   Handle Handle       Handle           Seal/Gasket Motor Handle     Switch       Switch Motor Motor Motor Motor Vent Vent Motor Switch Motor Fan     Switch     Switch     Switch Foot Cavity Lock Motor Switch   Hinge   Switch   Switch Motor   Compartment Fan       Vent Fan   Rack Cavity Fan Switch Shelf Panel Panel Lid Switch Panel   Rack Shelf Shelf Lid Vent   Panel Shelf   Rack Rack Cavity Drain   Switch Top Switch Motor Switch Fan Cavity Lock       Panel Switch Foot Switch     Switch Panel Switch Motor Panel Panel Motor Switch Cavity Cavity   Lifters Panel Lock Shelf     Knobs Panel Switch Burner   Foot Knobs Burner Switch Fan Fan   Panel Rack             Knobs Knobs Knobs Panel Shelf Compartment Panel Switch     Panel Switch   Panel Switch Switch Compartment Panel Cavity Cavity   Insulation Panel Shelf Top Motor Switch     Knobs   Rack     Fan Fan Fan Trim   Top Foot Rack Cavity Panel   Panel Switch   Panel Rack   Panel Foot Switch Panel Panel   Seal/Gasket Switch Panel Panel Panel Panel       Cavity Vent Rack Drain   Lifters Drain Panel Lid Panel Rack   Switch     Switch   Knobs   Switch   Switch Burner Burner Fan Burner Foot Switch Panel Panel     Burner Top Burner   Foot Fan Burner Switch   Knobs Top Burner Top Switch     Switch Switch Switch     Switch Switch Switch   Vent     Lifters Cavity Vent Panel Panel     Switch Switch Switch Switch Switch Top Top   Switch Switch       Element Top Top   Burner Top       Switch   Burner   Top Top Top Top   Compartment Foot Switch Cavity Hinge Lock Motor Switch Switch Seal/Gasket Compartment Compartment   Foot Motor Panel   Panel Switch Lid Lock   Burner Top Burner Shelf Lifters Panel Shelf Hinge Motor Shelf Compartment   Panel Panel Shelf Drain Hinge Panel         Seal/Gasket Fan Fan Fan Switch     Fan Fan Cavity Cavity   Lock Panel Drain   Panel   Knobs Lifters Fan   Lifters Lock Lid Drain Panel Lock     Switch Panel Panel Panel Lid     Lifters Cavity             Lock Top Switch   Burner   Foot Burner Switch   Foot   Top Top Burner     Knobs     Seal/Gasket Insulation Panel Seal/Gasket Panel Motor   Panel Insulation Compartment Panel Switch Cavity Panel Panel Cavity Handle Burner Top Top Top Burner Burner Burner   Panel Top Fan Switch Fan Shelf Shelf   Panel   Switch           Fan Fan Fan Vent Rack Rack Switch Rack                         Motor Belt Belt Panel Panel Drain   Panel Drain Panel Switch Seal/Gasket         Fan Vent Seal/Gasket Panel Switch Seal/Gasket   Switch Trim Wheels Wheels Rack Lid Shelf Panel   Panel Fan Seal/Gasket Panel Fan Lock Switch   Shelf Fan   Containers Containers   Compartment     Foot Lock   Knobs   Burner Top Top Shelf Top Panel Burner   Knobs   Knobs Seal/Gasket Vent Knobs Top Burner   Panel Element Top Panel       Fan Foot Fan Panel     Knobs         Top Top Knobs Panel Panel Valve Top Burner Burner Burner Top Seal/Gasket Seal/Gasket Burner Top Trim Switch Motor Shelf   Knobs   Panel   Panel Shelf   Motor Burner   Fan     Lock Switch     Switch   Compartment   Shelf     Foot Hinge     Panel Fan   Cavity Fan Panel Motor Shelf Vent   Switch   Rack Fan Rack Shelf Motor Switch Switch Burner Panel Panel   Panel Panel Burner Burner Top     Switch   Lid Lid Lifters Lifters Lock Burner   Top Top Top Burner Panel Burner Burner   Top   Shelf Switch Top Fan Top Burner Top Top Switch Burner Top Panel Fan Valve     Panel   Switch Fan Panel Compartment Fan Burner Top Burner   Panel Panel Cavity Panel Fan Foot   Panel Shelf Switch Shelf   Switch Switch   Fan Burner Top Rack Lifters Lifters Rack Rack Lock Seal/Gasket Insulation Panel Fan Burner Switch       Lock Panel Fan Lid   Fan     Lid Lid Cavity Top   Switch Rack Switch   Panel   Rack Shelf Hinge Trim   Vent   Panel     Burner   Top Top Burner Burner Switch Top   Burner Fan   Cavity       Switch Knobs Switch Switch   Panel Vent   Burner Seal/Gasket Switch   Switch   Cavity   Switch Switch Lid Switch     Compartment   Lock   Switch Top   Switch Lifters Cavity Switch Shelf                       Burner Burner     Shelf Shelf       Burner Switch   Switch   Fan Top Top Top Switch   Knobs Lock Panel Top Top Fan   Switch Panel Shelf       Switch Burner     Containers Switch Lock Top       Panel   Shelf Switch Fan       Motor   Panel Knobs Foot Panel Fan Fan   Fan Knobs Top Panel Foot Vent Motor Wheels       Panel Panel Shelf Top Lock             Shelf   Knobs Switch Lock   Hinge   Switch Shelf Wheels Wheels   Panel Seal/Gasket Wheels     Compartment Panel Switch   Lock       Motor       Switch   Compartment Switch Switch Shelf         Compartment Compartment         Shelf Switch Rack Panel Panel Burner   Seal/Gasket Shelf Trim Trim Trim Shelf Seal/Gasket Shelf Lock Panel Element Element Lock Trim Burner Top Vent Lock Switch Rack Rack   Panel Rack Switch   Panel   Top Panel Burner Element Compartment Shelf Burner Trim Element Hinge Shelf Burner Burner   Lifters Lifters Lid Seal/Gasket Seal/Gasket Vent Vent Foot Foot Fan Drain   Drain Panel Seal/Gasket Vent Vent   Panel Panel Top Vent     Switch Switch Switch Switch Motor Foot Panel Panel   Panel       Panel Rack Lifters Switch Fan Switch   Lock Panel Switch Lifters Switch Lifters Rack Panel Panel Burner Top Trim Shelf Lifters   Rack Rack       Panel Fan Burner Burner Fan Panel Panel   Top Burner Knobs Burner   Panel Top Top Switch Switch Seal/Gasket Compartment Switch Lock Burner     Fan Top Top Switch   Panel Fan Rack Panel Rack Lid Lifters Lifters Panel Shelf Shelf   Rack Rack Compartment Fan Shelf Top Top Top   Lid Vent Lid Top Top Top Compartment Compartment Shelf   Panel Drain   Shelf Panel Valve Lifters Foot     Switch Fan     Top     Element Burner               Switch   Lock Foot Switch   Switch Switch             Switch   Switch Switch   Switch       Switch   Switch Switch         Motor Handle   Foot Vent Drain Switch Valve Motor   Vent Vent Motor   Switch Motor Motor Motor Motor Hinge Hinge   Knobs Hinge       Switch       Switch Trim Trim Panel Panel Vent Drain Drain Seal/Gasket       Knobs     Trim Knobs Switch Switch   Handle           Top Knobs         Knobs Switch Cavity Cavity Compartment Fan Seal/Gasket Seal/Gasket Switch Switch Wheels Foot Panel     Switch   Panel Panel Vent Switch Lid   Burner   Top Burner Top Top                     Panel Fan     Panel Panel Switch           Motor Top   Element       Valve Panel Shelf Panel Lifters Panel Lifters Lifters   Panel Switch   Panel Knobs     Panel   Knobs Top     Knobs Fan     Fan   Switch Panel Lock Panel Fan Lock Fan Fan Top Drain     Panel Lifters Lock Lid Lock Cavity Motor Lid   Fan Top Burner Fan Burner Top Panel Switch Wheels Burner   Switch   Panel Vent   Lifters Panel Burner Burner Fan Top   Fan   Knobs Switch Foot Fan Trim Belt Cavity   Trim Top Switch   Knobs Top Shelf Panel     Switch       Panel Compartment Hinge Switch           Top Motor           Motor Motor   Fan           Top Top       Fan Panel   Top Top     Compartment Switch Vent Panel   Panel Panel Hinge Lid Lifters Cavity Panel Lid Panel Top     Panel   Switch Panel   Compartment Switch Compartment Compartment   Top Burner   Knobs   Burner   Element Panel Shelf Burner Burner Cavity Lifters Burner     Handle   Knobs Knobs Switch   Burner Burner   Top Panel       Seal/Gasket Seal/Gasket Valve Valve Rack   Top   Shelf Switch Shelf     Panel Switch           Shelf Switch Shelf   Lock Panel Foot Panel Valve Panel Lifters Lifters     Shelf Shelf Panel Wheels Foot     Burner Top Burner Compartment Motor Switch Vent     Switch   Panel   Switch Switch Switch Lifters Lifters Lid Lid Lock Panel Lock Lock Lock Lid Lifters Lifters Lock Switch Panel Lifters Lifters Lifters Lock Vent Panel Motor Insulation Insulation Drain     Switch Cavity Foot   Shelf   Switch Motor Switch   Switch Panel Panel     Panel Panel Switch Switch Top Burner Top Knobs                             Switch Lock Panel Switch     Knobs Switch Compartment   Switch   Panel Switch           Knobs Switch Knobs Switch Trim       Knobs Motor   Knobs Switch Foot   Vent Motor Switch Motor Switch Switch   Foot Seal/Gasket         Knobs   Switch   Switch     Motor           Rack       Panel Switch Switch Motor                     Foot Foot   Drain   Drain       Foot Switch Switch Motor   Compartment Foot   Handle Motor   Seal/Gasket         Switch Containers Panel Panel   Seal/Gasket Seal/Gasket           Switch Motor     Panel     Switch         Knobs   Panel Switch Drain Drain Drain   Panel       Drain     Seal/Gasket   Panel Switch                   Motor Switch   Switch   Switch   Handle Panel   Switch Motor Handle Handle Motor Motor Motor     Lock   Knobs   Switch Foot Switch   Motor Lock     Panel Panel   Fan Knobs Switch   Switch Switch Switch Switch     Switch     Switch Containers Motor Lifters Lock Lock Lock   Containers Switch   Motor Motor Panel Lock Valve     Switch Handle Motor Motor Motor Lock     Switch Lock Switch   Switch Seal/Gasket Switch Motor     Switch Motor Compartment Compartment Motor Motor Motor Lock Motor Switch           Knobs Seal/Gasket Motor Handle     Seal/Gasket Lock   Switch       Knobs Hinge Foot Wheels Foot Wheels Motor Seal/Gasket Seal/Gasket Foot Foot Foot   Switch   Switch   Panel Switch Switch Motor   Knobs Switch       Foot Lock Lock   Switch Hinge         Handle   Motor           Seal/Gasket Trim       Knobs Seal/Gasket Handle         Hinge Panel Switch   Switch Motor Knobs   Switch     Handle Knobs Switch Handle Insulation Trim Switch Fan Switch Containers Containers   Motor Switch   Knobs Cavity Switch   Lock     Foot Fan Lock Handle Vent Knobs Lock   Motor Lock Vent Motor Motor   Motor Seal/Gasket Motor     Valve Switch     Switch Seal/Gasket Motor Containers   Foot Foot     Motor   Trim   Switch Switch   Switch Vent   Foot Foot   Knobs Lock Handle   Switch     Knobs Switch   Knobs Switch Motor Seal/Gasket Seal/Gasket   Handle   Knobs Handle Motor Seal/Gasket Handle       Switch   Handle Handle Handle Handle Handle Handle Handle Knobs Switch Switch Panel Handle Switch   Knobs Switch Motor Handle Knobs Knobs Switch Foot Seal/Gasket Motor           Handle     Handle       Motor Handle Handle   Handle Handle Handle Handle Motor   Switch Switch Motor Motor Motor Switch     Knobs         Seal/Gasket   Handle Motor Switch   Seal/Gasket Lock Switch       Handle Motor Motor Vent Switch Switch   Switch Seal/Gasket Motor Fan Switch     Valve Seal/Gasket   Knobs     Motor Vent Vent Switch       Lock Lock   Switch Lock Switch       Switch Switch Panel Cavity     Switch   Panel     Motor Hinge Panel   Lock Motor Motor Motor Seal/Gasket Seal/Gasket     Knobs Drain Motor Seal/Gasket Lock         Cavity   Knobs Handle Seal/Gasket     Switch Containers Switch   Switch Panel Wheels   Lock Motor Seal/Gasket   Switch     Knobs     Foot Lock Knobs   Seal/Gasket     Switch Vent Switch Knobs Motor Motor Motor     Switch Foot Seal/Gasket     Vent Seal/Gasket Vent   Switch   Knobs Switch   Motor Insulation Handle Handle Handle Switch Lock Fan     Knobs Panel   Switch Switch   Motor Switch Motor     Lock Lock Lock Lock Motor Motor Motor Motor Motor Panel Panel Panel Switch Seal/Gasket Motor   Switch     Rack Cavity Seal/Gasket   Foot   Seal/Gasket Switch     Compartment Seal/Gasket Switch Motor Compartment Rack Switch Switch   Seal/Gasket   Switch Switch Switch Switch           Switch Panel Switch Switch Seal/Gasket     Rack Shelf Panel   Switch     Seal/Gasket Compartment Switch Switch     Switch Vent   Motor Switch Panel Switch       Lock     Foot Motor               Panel Panel Switch Switch Valve   Knobs   Seal/Gasket Vent   Handle Vent Shelf Switch Motor         Motor Motor   Motor Foot Motor Motor   Motor Motor Panel Switch Switch     Containers Motor Motor Panel Switch Seal/Gasket Seal/Gasket Switch Switch Belt Belt Switch Switch Handle Seal/Gasket       Seal/Gasket         Lock   Lock Handle Switch   Panel   Motor Switch   Switch Switch Lock Switch Switch Panel Switch Switch Rack         Fan Switch   Motor   Switch Lock   Handle Lock Motor     Switch Seal/Gasket Cavity Containers Rack Switch     Lock Switch       Lock   Switch Panel Hinge   Switch Switch Switch   Motor Lock     Handle       Switch Foot Lock     Motor Containers Lock Drain Motor Motor Motor Motor Panel             Switch Switch Switch Switch   Compartment Seal/Gasket       Motor Motor Lock   Motor Motor Vent   Switch Motor Switch Switch           Knobs Switch   Wheels   Lock Lock Lock   Knobs Seal/Gasket Switch Switch   Switch Rack Valve Panel     Motor   Switch Knobs Switch   Knobs Handle Handle Seal/Gasket   Fan       Switch   Switch     Foot Knobs   Motor Switch             Switch Knobs Switch Motor   Switch Panel Motor Motor Fan Motor Lock   Switch     Switch     Switch Switch   Switch Switch Switch     Switch Foot     Rack   Switch   Panel   Seal/Gasket     Lock   Motor Switch     Switch     Rack Compartment Seal/Gasket               Wheels   Lock Motor Panel Panel Switch Switch Switch Lock     Handle Knobs   Knobs     Lock           Switch     Switch     Switch     Handle Switch Handle Handle Motor Motor Motor   Motor Seal/Gasket Handle   Knobs Switch Motor Seal/Gasket Seal/Gasket Handle Handle Handle         Switch   Switch   Switch Switch Switch   Knobs Seal/Gasket   Knobs   Knobs Switch   Handle     Handle Handle Handle Motor Lock Seal/Gasket Handle Trim Lock   Knobs     Switch     Lock Switch   Motor Motor Switch   Switch Handle Lock Seal/Gasket     Panel Motor Motor Motor Motor Motor Motor Switch   Switch Switch   Switch   Switch Switch   Knobs Fan Panel Seal/Gasket Lock   Motor   Switch Panel     Motor         Switch   Switch Switch Seal/Gasket Seal/Gasket Motor Motor   Switch Knobs   Knobs Switch Foot Fan Switch Drain   Compartment Switch Switch Motor Motor Switch Motor Motor   Switch     Foot Lock Knobs Panel Motor Seal/Gasket Motor Motor     Seal/Gasket Hinge   Motor Rack Lock Motor Vent Fan Knobs   Foot Fan   Vent Panel Seal/Gasket Vent Drain   Knobs Panel Switch   Knobs             Switch   Switch Fan   Lock                 Knobs Seal/Gasket Handle                 Handle Handle       Switch     Switch   Switch Switch Foot     Vent         Motor Cavity     Switch Switch Switch   Motor Motor Drain Motor Motor Motor Wheels Switch Hinge   Switch Switch     Switch         Switch Switch Foot Switch Containers Rack   Hinge         Handle   Motor Handle Handle Seal/Gasket     Belt Switch       Motor     Switch Lifters Switch Motor Motor Seal/Gasket Switch       Lock Switch   Switch Lifters Switch Switch Lock Motor Seal/Gasket Drain Motor   Seal/Gasket Lock Lock Motor Motor Handle         Knobs   Seal/Gasket     Switch Lifters Switch Switch Switch Lock Lock Motor     Switch Motor     Switch Motor             Handle   Switch     Switch       Switch         Switch   Knobs       Motor Handle Handle Handle Knobs Switch     Handle Trim Motor Panel Handle   Switch Switch Switch Switch   Motor             Motor Switch Switch Switch   Knobs Handle Handle Knobs Seal/Gasket Panel Switch Handle     Lock Lock Motor Switch Containers Rack Panel     Switch Motor   Lock Switch Panel Switch Panel Switch   Seal/Gasket Switch   Panel   Switch     Drain   Handle   Switch Switch Motor       Switch     Vent Switch       Switch Switch Lock Motor   Handle     Handle Motor Switch     Lock Motor Lock Motor Fan         Hinge   Containers Motor Foot Seal/Gasket Lock   Lock     Switch Drain   Switch Switch Switch Motor Switch Motor Lock Handle Compartment     Insulation Switch Lock Motor     Motor       Motor     Knobs Handle   Motor Foot   Knobs Motor     Knobs Switch Switch   Lock     Switch Panel   Panel Shelf Switch Seal/Gasket Seal/Gasket Seal/Gasket Switch Drain   Switch Switch Switch Valve Switch     Switch Switch Containers Switch   Switch Switch Motor Motor Motor Motor Switch     Switch   Switch Switch     Lock   Motor Motor Switch Switch   Motor     Knobs Knobs   Switch Switch Switch Switch   Motor     Switch Lock Seal/Gasket   Handle Foot Switch   Panel Lock Drain Lock         Switch Motor     Switch Motor   Motor Motor       Knobs     Switch Switch   Switch Switch Switch Switch   Switch   Knobs Panel Lock   Switch   Lock Lock Motor Lock   Knobs   Switch   Trim   Lock Switch Seal/Gasket Handle Panel   Hinge Motor Motor             Switch Switch Fan Fan   Handle Handle       Panel     Panel   Motor   Knobs Handle   Switch   Seal/Gasket       Switch   Handle Seal/Gasket Valve   Knobs       Fan       Switch   Containers Motor Motor Lock Lock Seal/Gasket Wheels Fan Motor       Switch Switch   Seal/Gasket   Knobs Motor Switch Switch Lock Motor     Lock   Switch Motor Motor Seal/Gasket Switch Switch           Lock Lock       Panel Lock Switch Switch Switch     Switch Switch Lock Seal/Gasket     Switch Switch Lock Compartment     Seal/Gasket Lock Vent Motor     Switch     Cavity       Fan Knobs Switch Switch   Switch Shelf       Switch     Containers   Switch   Lock Trim   Switch Vent   Switch   Vent               Handle Lock     Seal/Gasket       Switch Switch   Switch Switch   Switch Switch Switch   Compartment Switch   Panel Drain Switch     Knobs   Motor Fan Fan Vent Wheels Switch Switch   Motor Fan Fan Fan Fan Vent Fan Drain Fan Seal/Gasket Fan Vent Vent Seal/Gasket Switch   Switch     Knobs Knobs Switch   Switch   Switch Switch     Switch Vent     Hinge Seal/Gasket   Switch Foot Fan Motor Vent     Motor       Switch   Switch Handle Switch     Knobs       Foot Knobs Switch Switch   Motor Motor   Switch             Panel Panel Switch Switch           Fan Switch   Motor Lock Switch Switch Panel Knobs       Fan   Motor           Lock Drain Seal/Gasket   Knobs Switch   Fan Foot   Motor Switch Motor Handle   Switch     Knobs   Switch   Switch Switch Switch Seal/Gasket Cavity Drain Motor   Switch   Switch Lock Lock Lock Switch Switch Motor Lock     Switch Lock Lock   Fan   Switch Lock     Motor   Switch Switch Switch Switch   Switch   Motor   Knobs       Knobs     Foot Hinge     Handle Drain Seal/Gasket Hinge   Drain Drain Drain Drain Drain Cavity Drain Drain Drain Cavity Seal/Gasket Containers Containers     Cavity Drain Drain Drain Drain Lock Drain Drain Drain Drain Drain Foot Cavity Cavity Drain Drain Drain Drain Hinge Motor   Hinge Panel   Seal/Gasket Containers Lock Seal/Gasket Vent Seal/Gasket Switch Vent Seal/Gasket Knobs Vent Lock Vent Foot Valve Seal/Gasket Seal/Gasket Lock Lock Lock Seal/Gasket Vent Containers Vent Switch Lock Foot Seal/Gasket Containers Lock Lock Seal/Gasket Switch Vent Handle Seal/Gasket Lock Lock Fan Shelf Drain Drain Cavity Foot Drain Drain Drain Foot Drain Motor Drain Drain Seal/Gasket Containers Lock Seal/Gasket Containers   Knobs Vent Motor Vent Seal/Gasket Foot Seal/Gasket Lock   Knobs Containers Vent Containers Containers Vent Rack Seal/Gasket Containers   Switch Containers Seal/Gasket Seal/Gasket Lock Seal/Gasket Vent Switch Lock Seal/Gasket Vent Seal/Gasket Containers Vent Containers Containers Containers Vent Rack   Drain     Knobs Switch Lock Vent     Handle Trim Belt Rack Drain Drain Cavity Drain Cavity Cavity Drain Cavity Drain Drain Switch Cavity Drain Drain Drain Cavity Cavity Cavity Drain Cavity Cavity Drain Drain Cavity Drain Drain Cavity Fan   Knobs   Knobs Switch   Knobs   Handle Motor Motor Switch Hinge   Switch Switch Panel Cavity Drain Drain Drain Drain Drain Drain Drain Drain Drain Drain Drain Cavity Drain Drain Drain Drain Drain Drain Drain Drain Cavity Cavity Drain Drain Drain Drain Cavity Drain Cavity Cavity Drain Drain Cavity Drain Cavity Drain Cavity Drain Drain Cavity Drain Drain Drain Drain Foot Drain Cavity Drain Cavity Drain Drain Trim Drain Cavity Drain Seal/Gasket Drain Cavity Drain Cavity Drain Drain Drain Drain Cavity Drain Drain Drain Cavity Drain Drain Drain Drain Cavity Drain Drain Drain Drain Drain Drain Cavity Drain Drain Drain Cavity Drain Cavity Cavity Drain Drain Cavity Drain Drain Drain Drain Foot Cavity Drain Drain Drain Fan Cavity Drain Drain Drain Drain Cavity Drain Cavity Drain Cavity Drain Drain Drain Drain Drain Drain Cavity Cavity Drain Drain Drain Drain Cavity Cavity Cavity Drain Cavity Cavity Drain Foot Drain   Drain Drain Drain Drain Cavity Cavity Drain Foot Cavity Drain Drain Drain Drain Drain Drain Drain Cavity Cavity';
+var lines = text.split(/[,\. ]+/g)
+var lines1 = text1.split(/[,\. ]+/g)
+    data = Highcharts.reduce(lines, function (arr, word) {
+        var obj = Highcharts.find(arr, function (obj) {
+            return obj.name === word;
+        });
+        if (obj) {
+            obj.weight += 1;
+        } else {
+            obj = {
+                name: word,
+                weight: 1
+            };
+            arr.push(obj);
+        }
+        return arr;
+    }, []); 
+	data1 = Highcharts.reduce(lines1, function (arr, word) {
+        var obj = Highcharts.find(arr, function (obj) {
+            return obj.name === word;
+        });
+        if (obj) {
+            obj.weight += 1;
+        } else {
+            obj = {
+                name: word,
+                weight: 1
+            };
+            arr.push(obj);
+        }
+        return arr;
+    }, []);
+Highcharts.setOptions({
+    colors: ['#008542',"#BA1303" ]
+});
+Highcharts.chart('container', {
+    series: [{
+        type: 'wordcloud',
+        data: data,
+        name: 'Occurrences'
+    }],
+    title: {
+        text: 'Wordcloud of Attributes'
+    }
+});
+Highcharts.chart('container1', {
+    series: [{
+        type: 'wordcloud',
+        data: data1,
+        name: 'Occurrences',
+		color:["green","red"]
+    }],
+    title: {
+        text: 'Wordcloud of Components'
+    } 
+	
+});
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,266 @@
+/*
+ * Base structure
+ */
+
+/* Move down content because we have a fixed navbar that is 50px tall */
+
+body {
+    margin: 0;
+    background-image: url('Picture1.jpg');
+    background-attachment: fixed;
+}
+
+/*
+ * Typography
+ */
+
+h1 {
+    margin-bottom: 20px;
+    padding-bottom: 9px;
+    border-bottom: 1px solid #eee;
+}
+
+/*
+ * Sidebar
+ */
+
+.sidebar {
+    position: fixed;
+    top: 51px;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    padding: 20px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    /* Scrollable contents if viewport is shorter than content. */
+    border-right: 1px solid #eee;
+}
+
+/* Sidebar navigation */
+
+.sidebar {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.sidebar .nav {
+    margin-bottom: 20px;
+}
+
+.sidebar .nav-item {
+    width: 100%;
+}
+
+.sidebar .nav-item + .nav-item {
+    margin-left: 0;
+}
+
+.sidebar .nav-link {
+    border-radius: 0;
+}
+
+/*
+ * Dashboard
+ */
+
+/* Placeholders */
+
+.placeholders {
+    padding-bottom: 3rem;
+}
+
+.placeholder img {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+
+.navbar-dark {
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+}
+
+
+#chartdiv {
+    width: 100%;
+    height: 500px;
+}
+
+/*
+a {
+    width: 53px;
+    height: 21px;
+    overflow: hidden;
+    -webkit-transition: width 1s;
+    transition: width 1s;
+    white-space: nowrap;
+}
+
+a:hover {
+    width: 145px;
+    -webkit-transition: width 1s;
+    transition: width 1s;
+}
+
+a:hover::after {
+    content: attr(data-value);
+}
+*/
+
+.marginbottom10px {
+    margin-bottom: 10px;
+}
+
+.text-all-caps {
+    text-transform: uppercase;
+}
+
+.logo-icon {
+    margin-right: 10px;
+    font-size: 26px;
+}
+
+.nav-icon {
+    color: #fff;
+    font-size: 22px;
+}
+
+.text-likes span,
+.text-likes:hover,
+.text-views span,
+.text-views:hover {
+    color: #fff;
+    text-decoration: none;
+}
+
+.text-likes i,
+.text-views i {
+    font-size: 20px;
+}
+
+.nav-sidebar {
+    position: fixed;
+    width: 250px;
+    left: 0;
+    top: 120px;
+    z-index: 10;
+}
+
+.nav-sidebar .nav-pills > li {
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.nav-sidebar .nav-pills > li > a {
+    display: block;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 15px 20px;
+    color: #a8a7a7;
+    position: relative;
+}
+
+.nav-sidebar .nav-pills > li > a:hover {
+    text-decoration: none;
+}
+
+.nav-sidebar .nav-pills > li > a > .menu-icon {
+    margin-right: 10px;
+}
+
+.nav-sidebar .nav-pills > li:after {
+    content: "";
+    background: #ff4343;
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 5px;
+}
+
+.nav-sidebar .nav-pills > li > .sub-menu {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.nav-sidebar .nav-pills > li > .sub-menu > li {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    position: relative;
+}
+
+.nav-sidebar .nav-pills > li > .sub-menu > li:after {
+    content: "";
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: #425668;
+    border-radius: 50%;
+    left: -15px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.nav-sidebar .nav-pills > li > .sub-menu > li > a {
+    display: block;
+    padding: 8px 10px;
+    color: #a8a7a7;
+    text-decoration: none;
+    position: relative;
+}
+
+.nav-sidebar .nav-pills > li > .sub-menu > li > a:after {
+    content: "";
+    position: absolute;
+    background: #425668;
+    width: 1px;
+    top: 0;
+    bottom: 0;
+    left: -12px;
+}
+
+.nav-sidebar .nav-pills > li > .sub-menu > li > a:hover {
+    text-decoration: none;
+}
+
+.nav-right {
+    position: fixed;
+    width: 100px;
+    right: 0;
+    top: 120px;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 10px 0 0 10px;
+}
+
+.nav-right .nav-pills > li > a {
+    display: block;
+    padding: 20px 20px;
+    color: #a8a7a7;
+    position: relative;
+    text-align: center;
+    border-radius: 10px 0 0 10px;
+    transition: all 0.5s ease;
+}
+
+.nav-right .nav-pills > li > a img {
+    height: 65px;
+}
+
+.nav-right .nav-pills > li > a:hover {
+    background: rgba(0, 0, 0, 0.95);
+}
+
+.footer-logo {
+    margin-bottom: 0;
+}
+
+.footer-logo img {
+    height: 50px;
+    margin-top: 10px;
+}
+
+.powered-by {
+    text-align: right;
+    margin-bottom: 0;
+    margin-top: 30px;
+}

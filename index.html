@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="images/whirlpoolLogo.png">
+
+    <title>Innovation Radar 2.0</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="fontawesome/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="dashboard.css" rel="stylesheet">
+    <style>
+        
+    </style>
+
+    <!-- Resources -->
+    <script src="assets/js/amcharts.js"></script>
+    <script src="assets/js/pie.js"></script>
+    <script src="assets/js/ammap_amcharts_extension.js"></script>
+    <script src="assets/js/continentsLow.js"></script>
+    <script src="assets/js/export.min.js"></script>
+    <link rel="stylesheet" href="../assets/js/export.css" type="text/css" media="all" />
+    <script src="assets/js/dark.js"></script>
+    <script src="assets/fontawesome5.0.4/svg-with-js/js/fontawesome-all.js"></script>
+
+    <!-- Chart code -->
+    <script>
+        /**
+         * Create a map
+         */
+        var map = AmCharts.makeChart("chartdiv", {
+            "type": "map",
+            "theme": "dark",
+            "projection": "winkel3",
+
+            /**
+             * Data Provider
+             * The images contains pie chart information
+             * The handler for `positionChanged` event will take care
+             * of creating external elements, position them and create
+             * Pie chart instances in them
+             */
+            "dataProvider": {
+                "map": "continentsLow",
+                "images": [{
+                    "title": "North America",
+                    "latitude": 39.563353,
+                    "longitude": -99.316406,
+                    "width": 200,
+                    "height": 200,
+                    "pie": {
+                        "type": "pie",
+                        "pullOutRadius": 0,
+                        "labelRadius": 0,
+						"radius": "10%",						
+                        "dataProvider": [{
+                            "category": "Positive",
+                            "value": 70.42,
+							"color":"green",
+                        }, {
+                            "category": "Negative",
+                            "value": 29.58,
+							"color":"red",
+                        }],
+                        "labelText": "[[value]]%",
+                        "valueField": "value",
+                        "titleField": "category",
+						"colorField": "color",
+                    }
+                }, {
+                    "title": "Europe",
+                    "latitude": 50.896104,
+                    "longitude": 19.160156,
+                    "width": 200,
+                    "height": 200,
+                    "pie": {
+                        "type": "pie",
+                        "pullOutRadius": 0,
+                        "labelRadius": 0,
+                        "radius": "10%",
+                        "dataProvider": [{
+                            "category": "Positive",
+                            "value": 76.56,
+							"color":"green",
+                        }, {
+                            "category": "Negative",
+                            "value": 24.44,
+							"color":"red",
+                        } ],
+                        "labelText": "[[value]]%",
+                        "valueField": "value",
+                        "titleField": "category",
+						"colorField": "color",
+                    }
+                }]
+            },
+
+            /**
+             * Add event to execute when the map is zoomed/moved
+             * It also is executed when the map first loads
+             */
+            "listeners": [{
+                "event": "positionChanged",
+                "method": updateCustomMarkers
+            }]
+        });
+
+        /**
+         * Creates and positions custom markers (pie charts)
+         */
+        function updateCustomMarkers(event) {
+            // get map object
+            var map = event.chart;
+
+            // go through all of the images
+            for (var x = 0; x < map.dataProvider.images.length; x++) {
+
+                // get MapImage object
+                var image = map.dataProvider.images[x];
+
+                // Is it a Pie?
+                if (image.pie === undefined) {
+                    continue;
+                }
+
+                // create id
+                if (image.id === undefined) {
+                    image.id = "amcharts_pie_" + x;
+                }
+                // Add theme
+                if ("undefined" == typeof image.pie.theme) {
+                    image.pie.theme = map.theme;
+                }
+
+                // check if it has corresponding HTML element
+                if ("undefined" == typeof image.externalElement) {
+                    image.externalElement = createCustomMarker(image);
+                }
+
+                // reposition the element accoridng to coordinates
+                var xy = map.coordinatesToStageXY(image.longitude, image.latitude);
+                image.externalElement.style.top = xy.y + "px";
+                image.externalElement.style.left = xy.x + "px";
+                image.externalElement.style.marginTop = Math.round(image.height / -2) + "px";
+                image.externalElement.style.marginLeft = Math.round(image.width / -2) + "px";
+            }
+        }
+
+        /**
+         * Creates a custom map marker - a div for container and a
+         * pie chart in it
+         */
+        function createCustomMarker(image) {
+
+            // Create chart container
+            var holder = document.createElement("div");
+            holder.id = image.id;
+            holder.title = image.title;
+            holder.style.position = "absolute";
+            holder.style.width = image.width + "px";
+            holder.style.height = image.height + "px";
+
+            // Append the chart container to the map container
+            image.chart.chartDiv.appendChild(holder);
+
+            // Create a pie chart
+            var chart = AmCharts.makeChart(image.id, image.pie);
+
+            return holder;
+        }
+    </script>
+</head>
+
+<body style="font-size:14px;">
+    <header class="top-nav-bar">
+        <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 border-bottom box-shadow navbar-dark">
+            <h3 class="my-0 mr-md-auto font-weight-normal text-all-caps"><i class="fa fa-cog" aria-hidden="true"></i> Innovation Radar</h3>
+            <nav class="my-2 my-md-0 mr-md-3">
+                <a class="p-2 text-likes" href="#"><i class="fa fa-thumbs-up" aria-hidden="true"></i> <span>2200</span></a>
+                <a class="p-2 text-views" href="#"><i class="fa fa-eye" style="color:orange;" aria-hidden="true"></i> <span>2200</span></a>
+            </nav>
+            <a class="btn btn-outline-default nav-icon" href="#"><i class="fa fa-globe" aria-hidden="true"></i></a>
+            <a class="btn btn-outline-default nav-icon" href="#"><i class="fa fa-cogs" aria-hidden="true"></i></a>
+            <a class="btn btn-outline-default nav-icon" href="#"><i class="fa fa-user" aria-hidden="true"></i></a>
+        </div>
+    </header>
+
+    <nav class="nav-sidebar">
+        <ul class="nav nav-pills flex-column">
+            <li>
+                <a  style="background: gray;color: black;" href="#"><i class="fa fa-tachometer menu-icon" aria-hidden="true"></i> Dashboard</a>
+            </li>
+            <li>
+                <a href="index.html"><i class="fa fa-tachometer menu-icon" aria-hidden="true"></i> Analysis</a>
+                <ul class="sub-menu">
+                    <li><a href="newlaunchanalysis.html">New Launch Analysis</a></li>
+                    <li><a href="ConsumerRating.html">Consumer Rating</a></li>
+                    <li><a href="brandassociationchart.html">Brand Association Chart</a></li>
+                    <li><a href="bestsellingSKU.html">Best selling SKUs</a></li>
+                    <li><a href="#">Sentiment Analysis</a></li>
+                    <!-- <li><a href="#">Opportunity Analysis</a></li> -->
+                    <li><a href="#">Attribute Analysis</a></li>
+                    <li><a href="#">Triggers of Purchase</a></li>
+                    <li><a href="#">SKU Deep Dive Analysis</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="exportreview.html"><i class="fa fa-tachometer menu-icon" aria-hidden="true"></i> Export Reviews</a>
+            </li>
+            <!-- <li>
+                <a href="#"><i class="fa fa-tachometer menu-icon" aria-hidden="true"></i> Export Reviews</a>
+            </li> -->
+        </ul>
+    </nav>
+    <nav class="nav-right">
+        <ul class="nav nav-pills flex-column">
+            <li>
+                <a href="#"><img src="images/right-icon1.png" /></a>
+            </li>
+            <li>
+                <a href="#"><img src="images/right-icon2.png" /></a>
+            </li>
+            <li>
+                <a href="#"><img src="images/right-icon3.png" /></a>
+            </li>
+            <li>
+                <a href="#"><img src="images/right-icon4.png" /></a>
+            </li>
+        </ul>
+		
+    </nav>
+	
+    <div class="container-fluid main-container dashboard-content">
+        <div class="row" style="background-color: black;opacity: 0.6;margin-top: 15px;">
+            <div class="col-md-12">
+                <div id="chartdiv"></div>
+                <!-- <a><i class="fas fa-home fa-2x"></i></a> -->
+                <!-- <div class="marginbottom10px"><a data-value="Home"><i class="fas fa-home fa-2x" ></i></a></div> -->
+                <!-- <div onclick="window.location.href = 'dashboard.html';" href="dashboard.html" class="marginbottom10px"><a  data-value="Dashboard"><i class="fas fa-chart-pie fa-2x" ></i></a></div>
+<div onclick="window.location.href = 'newskuanalysis.html';" href="dashboard.html"  ><a  data-value="SKU Analysis"><i class="fas fa-chart-line fa-2x" ></i></a></div> -->
+            </div>
+        </div>
+        <!-- <div class="row"> -->
+        <!-- <ul class="nav nav-pills flex-column">
+            <li class="nav-item">
+              <a class="nav-link active" href="#">Dashboard <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Reports</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Analysis</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Competitive Analysis</a>
+            </li>
+          </ul> -->
+
+
+
+        <!-- </div> -->
+    </div>
+<!-- <div style="position: fixed;right: 30px;bottom: 30px;"><span><a href="http://ec2-54-234-226-83.compute-1.amazonaws.com:5000/"><i class="fas fa-comment-alt fa-5x"></i></a></span></div> -->
+<div style="position: fixed;right: 30px;bottom: 30px;"><span><a href="http://ec2-54-234-226-83.compute-1.amazonaws.com:5000/" target="_blank">
+<i class="fas fa-comment-alt fa-5x"></i></a></span></div>
+    <footer>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col">
+                    <figure class="footer-logo">
+                        <!-- <img src="images/footer-logo.png" /> -->
+                        <img src="images/whirlpoolLogo.png" />
+                    </figure>
+                </div>
+                <div class="col">
+				
+                    <p class="powered-by">Powered by Latent View</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+    <script>
+        window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+</body>
+
+</html>
